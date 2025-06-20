@@ -14,6 +14,8 @@
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+
+
     <application
         android:name=".MyApp"
         android:allowBackup="true"
@@ -51,7 +53,21 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+        <!-- Service -->
+        <service
+            android:name=".zother.ServiceBgUpload"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
+        <!-- Receiver -->
+        <receiver
+            android:name=".zother.BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

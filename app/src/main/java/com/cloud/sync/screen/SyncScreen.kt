@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cloud.sync.data.SyncUiState
 import com.cloud.sync.view_model.SyncViewModel
+import java.util.Base64
 
 //TODO: in SDK 31 >= silent permission denial if permissions are not granted twice in a row. (or don't ask again)
 // Add some message saying go to settings and grant permission for storage
@@ -34,6 +35,8 @@ fun SyncScreen(
     modifier: Modifier = Modifier,
     viewModel: SyncViewModel = hiltViewModel()
 ) {
+    var content = "Avcom9x9U5RQ4am2Yzo7kHOJV9zF5slbJdt9Rh0PyuNfcHJveHk="
+    var dcontent  =  Base64.getDecoder().decode(content)
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
@@ -55,18 +58,18 @@ fun SyncScreen(
         verticalArrangement = Arrangement.Center
     ) {
         when (val state = uiState) {
-            SyncUiState.Idle -> IdleState { viewModel.onSyncButtonClicked(context) }
+            SyncUiState.Idle -> IdleState { viewModel.onSyncButtonClicked(context, content.toByteArray()) }
             is SyncUiState.Progress -> LoadingState(state.uploaded, state.total)
             is SyncUiState.Success -> SuccessState(state.count)
             SyncUiState.PermissionDenied -> PermissionDeniedState {
                 viewModel.onSyncButtonClicked(
-                    context
+                    context, dcontent
                 )
             }
 
             is SyncUiState.Error -> ErrorState(state.message) {
                 viewModel.onSyncButtonClicked(
-                    context
+                    context, dcontent
                 )
             }
 

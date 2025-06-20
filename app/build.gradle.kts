@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.cloud.sync"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -49,6 +49,10 @@ android {
         compose = true
         buildConfig = true
     }
+
+    packagingOptions {
+        exclude("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+    }
 }
 
 dependencies {
@@ -79,4 +83,20 @@ dependencies {
     implementation(libs.zxing.core)
 
     implementation(libs.hilt.navigation.compose)
+
+    // Retrofit dependencies
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
+    // bouncy castle
+    implementation(libs.bouncycastle){
+        {
+            exclude("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+        }
+    }
+
+    //okhttp
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.logging.interceptor)
+
 }

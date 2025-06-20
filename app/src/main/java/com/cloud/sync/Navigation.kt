@@ -1,4 +1,6 @@
 package com.cloud.sync
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavType
@@ -9,6 +11,7 @@ import androidx.navigation.navArgument
 import com.cloud.sync.screen.ScanScreen
 import com.cloud.sync.screen.SyncScreen
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()

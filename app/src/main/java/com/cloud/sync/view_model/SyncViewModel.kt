@@ -2,7 +2,9 @@ package com.cloud.sync.view_model
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cloud.sync.data.SyncUiState
@@ -32,9 +34,11 @@ class SyncViewModel @Inject constructor(
         permissionManager.setLauncher(launcher)
     }
 
-    fun onSyncButtonClicked(context: Context) {
+    // TODO: QR code data and pin should be used to authenticate and pair as soon as
+    //  qr code is scanned and user entered pin
+    fun onSyncButtonClicked(context: Context, qrCodeData: ByteArray) {
         if (checkPermissions(context)) {
-            startSync(context)
+            startSync(context, qrCodeData)
         } else {
             requestPermissions()
         }
@@ -43,7 +47,7 @@ class SyncViewModel @Inject constructor(
     fun handlePermissionResult(permissions: Map<String, Boolean>, context: Context) {
         // permissions is Map<String, Boolean> from callback, check if all required are granted
         if (permissions.hasRequiredPermissions()) {
-            startSync(context)
+            startSync(context, qrCodeData = ByteArray(0))
         } else {
             updateUiState(SyncUiState.PermissionDenied)
         }
@@ -61,7 +65,7 @@ class SyncViewModel @Inject constructor(
         return requiredPermissionSet.permissions.all { this.getOrDefault(it, false) }
     }
 
-    private fun startSync(context: Context) {
+    private fun startSync(context: Context, qrCodeData: ByteArray) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val photoUris = mediaRepository.getPhotoUris(context)
@@ -71,6 +75,27 @@ class SyncViewModel @Inject constructor(
                 updateUiState(SyncUiState.Error(e.localizedMessage ?: "Unknown error"))
             }
         }
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                var cloudServiceManager = CloudServiceManager(qrCodeData)
+//                cloudServiceManager.authenticateAndPair(qrCodeData)
+//                val photoUris = mediaRepository.getPhotoUris(context)
+//                val uploadedCount = cloudServiceManager.uploadPhotos(context, photoUris)
+//                updateUiState(SyncUiState.Success(uploadedCount))
+//            } catch (e: Exception) {
+//                updateUiState(SyncUiState.Error(e.localizedMessage ?: "Unknown error"))
+//            }
+//        }
+
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+////                CryptoCloudClient.onQrCodeAcquired();
+//                val photoUris = mediaRepository.getPhotoUris(context)
+////                CryptoCloudClient.startSendFile( File());
+//            } catch (e: Exception) {
+//                updateUiState(SyncUiState.Error(e.localizedMessage ?: "Unknown error"))
+//            }
+//        }
     }
 
 

@@ -13,7 +13,9 @@ navigationComposeAndroid = "2.9.0"
 # QR Code Scanner versions
 zxingAndroidEmbedded = "4.3.0"
 zxingCore = "3.5.2"
-
+retrofit = "2.9.0"
+bouncycastle = "1.79"
+okhttp = "4.12.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
@@ -37,6 +39,16 @@ zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embe
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
 
+# retrofit
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+
+#bouncycastle
+bouncycastle = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+
+#okhttp
+okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
