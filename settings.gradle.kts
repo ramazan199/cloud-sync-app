@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Sync"
 include(":app")
- 
+include(":communicationLib")
+include(":cloudClientConsoleApp")
