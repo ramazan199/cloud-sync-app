@@ -75,27 +75,6 @@ class SyncViewModel @Inject constructor(
                 updateUiState(SyncUiState.Error(e.localizedMessage ?: "Unknown error"))
             }
         }
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-//                var cloudServiceManager = CloudServiceManager(qrCodeData)
-//                cloudServiceManager.authenticateAndPair(qrCodeData)
-//                val photoUris = mediaRepository.getPhotoUris(context)
-//                val uploadedCount = cloudServiceManager.uploadPhotos(context, photoUris)
-//                updateUiState(SyncUiState.Success(uploadedCount))
-//            } catch (e: Exception) {
-//                updateUiState(SyncUiState.Error(e.localizedMessage ?: "Unknown error"))
-//            }
-//        }
-
-//        viewModelScope.launch(Dispatchers.IO) {
-//            try {
-////                CryptoCloudClient.onQrCodeAcquired();
-//                val photoUris = mediaRepository.getPhotoUris(context)
-////                CryptoCloudClient.startSendFile( File());
-//            } catch (e: Exception) {
-//                updateUiState(SyncUiState.Error(e.localizedMessage ?: "Unknown error"))
-//            }
-//        }
     }
 
 

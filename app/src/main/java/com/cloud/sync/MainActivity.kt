@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
-import com.cloud.sync.ui.theme.TestTheme
+import com.cloud.sync.ui.theme.AppTheme
 import com.cloud.sync.zother.ServiceBgUpload
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TestTheme {
+            AppTheme (dynamicColor = false){
                 AppNavigation()
             }
         }
