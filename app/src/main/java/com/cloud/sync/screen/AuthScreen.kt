@@ -169,6 +169,6 @@ fun PinInputField(
 @Composable
 fun AuthScreenPreview() {
     // This is a preview and won't have a real ViewModel
-    // You can simulate different states here
+    // we can simulate different states here
     AuthScreen(onAuthenticationSuccess = {})
 }

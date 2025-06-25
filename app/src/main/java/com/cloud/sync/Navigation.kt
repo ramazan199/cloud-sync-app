@@ -1,6 +1,4 @@
 package com.cloud.sync
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavType
@@ -16,12 +14,12 @@ import com.cloud.sync.screen.SyncScreen
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // 🔍 Check if we're in debug mode
+    // Check if we're in debug mode
     if (BuildConfig.DEBUG) {
 
         LaunchedEffect(Unit) {
             // Navigate directly to SyncScreen with dummy content
-            navController.navigate("auth") {
+            navController.navigate("sync") {
                 popUpTo(0) // Clear back stack
             }
         }
@@ -41,7 +39,7 @@ fun AppNavigation() {
         composable("auth"){
             AuthScreen(onAuthenticationSuccess = {
                 // When authentication is successful, navigate to the SyncScreen
-                navController.navigate("sync/Successfully_Authenticated") {
+                navController.navigate("sync") {
                     // This is important! It clears the navigation stack so the user
                     // can't press the back button to go back to the AuthScreen.
                     popUpTo("auth") {
@@ -51,12 +49,10 @@ fun AppNavigation() {
             })
         }
         composable(
-            route = "sync/{content}",
+            route = "sync",
 //            deepLinks = listOf(navDeepLink { uriPattern = "test://debug/sync-screen/{content}" }),
-            arguments = listOf(navArgument("content") { type = NavType.StringType })
         ) { backStackEntry ->
-            val content = backStackEntry.arguments?.getString("content")
-            SyncScreen(content = content)
+            SyncScreen()
         }
     }
 }

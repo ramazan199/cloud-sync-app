@@ -5,6 +5,7 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -54,10 +55,16 @@
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
         <!-- Service -->
+<!--        <service-->
+<!--            android:name=".zother.ServiceBgUpload"-->
+<!--            android:exported="false"-->
+<!--            android:foregroundServiceType="dataSync" />-->
+
+        <!-- Declare the Foreground Service -->
         <service
-            android:name=".zother.ServiceBgUpload"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
+            android:name=".service.FullScanService"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
 
         <!-- Receiver -->
         <receiver

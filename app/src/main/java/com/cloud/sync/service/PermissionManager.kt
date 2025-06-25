@@ -53,7 +53,7 @@ sealed class PermissionSet(val permissions: Set<String>) {
         }
     }
 
-    // Define your specific permission sets here
+    // Define specific permission sets here
     object Camera : PermissionSet(CAMERA)
     object Storage : PermissionSet(STORAGE)
 

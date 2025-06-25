@@ -1,124 +1,101 @@
 package com.cloud.sync.screen
 
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.cloud.sync.data.SyncUiState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cloud.sync.view_model.SyncViewModel
-import java.util.Base64
 
-//TODO: in SDK 31 >= silent permission denial if permissions are not granted twice in a row. (or don't ask again)
-// Add some message saying go to settings and grant permission for storage
-// SyncScreen.kt
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SyncScreen(
-    content: String?,
-    modifier: Modifier = Modifier,
-    viewModel: SyncViewModel = hiltViewModel()
-) {
-    var content = "Avcom9x9U5RQ4am2Yzo7kHOJV9zF5slbJdt9Rh0PyuNfcHJveHk="
-    var dcontent  =  Base64.getDecoder().decode(content)
-    val context = LocalContext.current
-    val uiState by viewModel.uiState.collectAsState()
+fun SyncScreen(syncViewModel: SyncViewModel = viewModel()) {
+    val uiState by syncViewModel.uiState.collectAsState()
 
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        viewModel.handlePermissionResult(permissions, context)
-    }
-    //TODO: sometimes buggy: mentioned above in comments
-    LaunchedEffect(Unit) {
-        viewModel.setPermissionLauncher(permissionLauncher)
-    }
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        when (val state = uiState) {
-            SyncUiState.Idle -> IdleState { viewModel.onSyncButtonClicked(context, content.toByteArray()) }
-            is SyncUiState.Progress -> LoadingState(state.uploaded, state.total)
-            is SyncUiState.Success -> SuccessState(state.count)
-            SyncUiState.PermissionDenied -> PermissionDeniedState {
-                viewModel.onSyncButtonClicked(
-                    context, dcontent
+            Text(text = "Gallery Sync", style = MaterialTheme.typography.headlineMedium)
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(text = "Status:", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = uiState.statusText,
+                        modifier = Modifier.padding(top = 8.dp),
+                        minLines = 2
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        "Sync New Photos Automatically",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        "Runs periodically in the background",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Switch(
+                    checked = uiState.isBackgroundSyncScheduled,
+                    onCheckedChange = syncViewModel::onFromNowSyncToggled,
+                    enabled = !uiState.isFullScanInProgress
                 )
             }
 
-            is SyncUiState.Error -> ErrorState(state.message) {
-                viewModel.onSyncButtonClicked(
-                    context, dcontent
-                )
+            HorizontalDivider(modifier = Modifier.padding(vertical = 24.dp))
+
+            Text("Manual Full Scan", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "Finds and uploads any photos missed in the past.",
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
+            )
+
+            val isFullScanning = uiState.isFullScanInProgress
+            Button(
+                onClick = { if (isFullScanning) syncViewModel.stopFullScan() else syncViewModel.startFullScan() },
+                enabled = true, // Always allow starting/stopping the full scan
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isFullScanning) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                ),
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(48.dp)
+            ) {
+                if (isFullScanning) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = LocalContentColor.current,
+                        strokeWidth = 3.dp
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text("Stop Full Scan")
+                } else {
+                    Text("Start Full Scan")
+                }
             }
-
-            else -> Unit // for other states
-        }
-    }
-}
-
-
-@Composable
-private fun IdleState(onSyncClicked: () -> Unit) {
-    Button(onClick = onSyncClicked) {
-        Text("Sync Photos")
-    }
-}
-
-@Composable
-private fun LoadingState(uploaded: Int, total: Int) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        CircularProgressIndicator()
-        Text("Uploading photos...")
-        Text("$uploaded out of $total uploaded")
-    }
-}
-
-@Composable
-private fun SuccessState(count: Int) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Icon(Icons.Default.Check, contentDescription = null, tint = Color.Green)
-        Text("Synced $count photos!")
-    }
-}
-
-@Composable
-private fun PermissionDeniedState(onRetryClicked: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Permission denied. Please grant storage access.")
-        Button(onClick = onRetryClicked) {
-            Text("Try Again")
-        }
-    }
-}
-
-@Composable
-private fun ErrorState(message: String, onRetryClicked: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Error: $message")
-        Button(onClick = onRetryClicked) {
-            Text("Retry")
         }
     }
 }
