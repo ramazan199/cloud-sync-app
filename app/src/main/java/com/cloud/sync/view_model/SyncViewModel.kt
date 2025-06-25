@@ -11,6 +11,7 @@ import com.cloud.sync.data.SyncUiState
 import com.cloud.sync.data.TimeInterval
 import com.cloud.sync.repository.SyncRepository
 import com.cloud.sync.service.FullScanService
+import com.cloud.sync.service.SyncStatusManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

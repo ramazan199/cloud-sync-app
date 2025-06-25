@@ -1,4 +1,4 @@
-package com.cloud.sync.view_model;
+package com.cloud.sync.service
 
 import com.cloud.sync.data.SyncProgress
 import kotlinx.coroutines.flow.MutableStateFlow

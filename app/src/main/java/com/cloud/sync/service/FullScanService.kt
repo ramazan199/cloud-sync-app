@@ -7,7 +7,7 @@ import androidx.core.app.NotificationCompat
 import com.cloud.sync.data.GalleryPhoto
 import com.cloud.sync.data.TimeInterval
 import com.cloud.sync.repository.SyncRepository
-import com.cloud.sync.view_model.SyncStatusManager
+import com.cloud.sync.service.SyncStatusManager
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import kotlin.coroutines.CoroutineContext

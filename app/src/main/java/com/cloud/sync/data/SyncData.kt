@@ -19,7 +19,6 @@ data class SyncUiState(
     val isFullScanInProgress: Boolean = false,
     val isBackgroundSyncScheduled: Boolean = false,
     val statusText: String = "Ready.",
-    val syncBatchSize: Int = 10
 )
 
 // Progress state for the SyncStatusManager
