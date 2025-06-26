@@ -9,36 +9,48 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import javax.inject.Inject
+
+interface ISyncRepository {
+    val syncedIntervals: Flow<List<TimeInterval>>
+    suspend fun saveSyncedIntervals(intervals: List<TimeInterval>)
+    val syncFromNowPoint: Flow<Long>
+    suspend fun saveSyncFromNowPoint(timestamp: Long)
+    suspend fun deleteSyncFromNowPoint()
+    suspend fun clearAllData()
+}
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "sync_settings")
 
-class SyncRepository(private val context: Context) {
+class SyncRepositoryImpl @Inject constructor(
+    private val context: Context
+) : ISyncRepository {
 
     companion object {
         private val SYNC_INTERVALS_KEY = stringPreferencesKey("sync_intervals")
         private val SYNC_FROM_NOW_POINT_KEY = longPreferencesKey("sync_from_now_point")
     }
 
-    val syncedIntervals: Flow<List<TimeInterval>> = context.dataStore.data.map { prefs ->
+    override val syncedIntervals: Flow<List<TimeInterval>> = context.dataStore.data.map { prefs ->
         Json.decodeFromString<List<TimeInterval>>(prefs[SYNC_INTERVALS_KEY] ?: "[]")
     }
 
-    suspend fun saveSyncedIntervals(intervals: List<TimeInterval>) {
+    override suspend fun saveSyncedIntervals(intervals: List<TimeInterval>) {
         context.dataStore.edit { it[SYNC_INTERVALS_KEY] = Json.encodeToString(intervals) }
     }
 
-    val syncFromNowPoint: Flow<Long> =
+    override val syncFromNowPoint: Flow<Long> =
         context.dataStore.data.map { it[SYNC_FROM_NOW_POINT_KEY] ?: 0L }
 
-    suspend fun saveSyncFromNowPoint(timestamp: Long) {
+    override suspend fun saveSyncFromNowPoint(timestamp: Long) {
         context.dataStore.edit { it[SYNC_FROM_NOW_POINT_KEY] = timestamp }
     }
 
-    suspend fun deleteSyncFromNowPoint() {
+    override suspend fun deleteSyncFromNowPoint() {
         context.dataStore.edit { it.remove(SYNC_FROM_NOW_POINT_KEY) }
     }
 
-    suspend fun clearAllData() {
+    override suspend fun clearAllData() {
         context.dataStore.edit { it.clear() }
     }
 }

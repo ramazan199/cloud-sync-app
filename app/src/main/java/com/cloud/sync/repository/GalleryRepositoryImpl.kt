@@ -1,35 +1,55 @@
-package com.cloud.sync.service
+package com.cloud.sync.repository
 
 import android.content.Context
 import android.os.Environment
 import android.provider.MediaStore
 import com.cloud.sync.data.GalleryPhoto
-import com.cloud.sync.data.TimeInterval
-import kotlinx.coroutines.delay
+import javax.inject.Inject
 
-class GalleryAndSyncHelpers(private val context: Context) {
-    // Simulates uploading a photo. later change to use communication library
-    suspend fun uploadPhoto(photo: GalleryPhoto) {
-        println("Uploading photo: ${photo.displayName} (Timestamp: ${photo.dateAdded})")
-        delay(500) // Simulate network latency
-        println("✅ Uploaded ${photo.displayName}")
+/**
+ * Interface for accessing photos from the device's gallery.
+ */
+interface IGalleryRepository {
+    /**
+     * Get photos from the gallery starting from a specific timestamp (seconds).
+     * @param startTimeSeconds: Time from which to fetch photos (default is 0 for all).
+     * @return List<GalleryPhoto>: A list of photos matching the time filter.
+     */
+    fun getPhotos(startTimeSeconds: Long = 0): List<GalleryPhoto>
+
+    /**
+     * Get photos from the gallery within a specific time interval.
+     * @param start: Start timestamp in seconds.
+     * @param end: End timestamp in seconds.
+     * @return List<GalleryPhoto>: A list of photos within the given interval.
+     */
+    fun getPhotosInInterval(start: Long, end: Long): List<GalleryPhoto>
+
+}
+
+class GalleryRepositoryImpl @Inject constructor( private val context: Context) : IGalleryRepository {
+
+    override fun getPhotos(startTimeSeconds: Long): List<GalleryPhoto> {
+        return queryPhotos(startTimeSeconds = startTimeSeconds)
     }
 
-    fun getPhotos(startTimeSeconds: Long = 0): List<GalleryPhoto> {
-        return queryPhotos(startTimeSeconds)
-    }
 
-    fun getPhotosInInterval(start: Long, end: Long): List<GalleryPhoto> {
+    override fun getPhotosInInterval(start: Long, end: Long): List<GalleryPhoto> {
         if (start > end) return emptyList()
-        return queryPhotos(start).filter { it.dateAdded <= end }
+        return queryPhotos(startTimeSeconds = start, endTimeSeconds = end)
     }
 
-    fun queryPhotos(
+    /**
+     * Queries the gallery for photos based on the provided time filters.
+     * @param startTimeSeconds: Start timestamp in seconds (optional).
+     * @param endTimeSeconds: End timestamp in seconds (optional).
+     * @return List<GalleryPhoto>: A list of photos matching the criteria.
+     */
+    private fun queryPhotos(
         startTimeSeconds: Long? = null,
         endTimeSeconds: Long? = null
     ): List<GalleryPhoto> {
         val photos = mutableListOf<GalleryPhoto>()
-
         val projection = arrayOf(
             MediaStore.Images.Media._ID,
             MediaStore.Images.Media.DISPLAY_NAME,
@@ -37,8 +57,7 @@ class GalleryAndSyncHelpers(private val context: Context) {
             MediaStore.Images.Media.DATA
         )
 
-
-        // --- DYNAMICALLY BUILD THE SELECTION CLAUSE ---
+        // Dynamically build the selection clause based on time filters
         val selectionParts = mutableListOf<String>()
         val selectionArgsList = mutableListOf<String>()
 
@@ -46,6 +65,7 @@ class GalleryAndSyncHelpers(private val context: Context) {
             selectionParts.add("${MediaStore.Images.Media.DATE_ADDED} >= ?")
             selectionArgsList.add(it.toString())
         }
+
         endTimeSeconds?.let {
             selectionParts.add("${MediaStore.Images.Media.DATE_ADDED} <= ?")
             selectionArgsList.add(it.toString())
@@ -59,9 +79,7 @@ class GalleryAndSyncHelpers(private val context: Context) {
         val selection = selectionParts.joinToString(" AND ")
         val selectionArgs = selectionArgsList.toTypedArray()
 
-
-        val sortOrder =
-            "${MediaStore.Images.Media.DATE_ADDED} ASC" // Sort by date added (ascending)
+        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} ASC"
 
         context.contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -83,25 +101,4 @@ class GalleryAndSyncHelpers(private val context: Context) {
 
         return photos
     }
-
-    fun mergeIntervals(intervals: List<TimeInterval>): List<TimeInterval> {
-        if (intervals.isEmpty()) return emptyList()
-        val sorted = intervals.sortedBy { it.start }
-        val merged = mutableListOf<TimeInterval>()
-        var current = sorted.first()
-        for (i in 1 until sorted.size) {
-            val next = sorted[i]
-            if (next.start <= current.end + 1) {
-                current = current.copy(end = maxOf(current.end, next.end))
-            } else {
-                merged.add(current)
-                current = next
-            }
-        }
-        merged.add(current)
-        return merged
-    }
 }
-
-
-

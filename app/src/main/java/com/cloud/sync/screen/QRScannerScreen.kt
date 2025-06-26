@@ -1,5 +1,3 @@
-// ScanScreen.kt
-
 package com.cloud.sync.screen
 
 import androidx.activity.compose.rememberLauncherForActivityResult

@@ -6,18 +6,21 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.cloud.sync.data.GalleryPhoto
 import com.cloud.sync.data.TimeInterval
-import com.cloud.sync.repository.SyncRepository
-import com.cloud.sync.service.SyncStatusManager
+import com.cloud.sync.repository.IGalleryRepository
+import com.cloud.sync.repository.ISyncRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
+import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
 class FullScanService : Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private lateinit var repository: SyncRepository
-    private lateinit var scanner: GalleryAndSyncHelpers
+    @Inject
+    lateinit var syncIntervalRepository: ISyncRepository
+    @Inject
+    lateinit var galleryRepository: IGalleryRepository
     private lateinit var notificationManager: NotificationManager
 
     companion object {
@@ -29,8 +32,6 @@ class FullScanService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        repository = SyncRepository(applicationContext); scanner =
-            GalleryAndSyncHelpers(applicationContext)
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     }
 
@@ -57,7 +58,7 @@ class FullScanService : Service() {
 
         try {
 //            repository.clearAllData() //TODO: remove clear its for testing purpose.
-            var allIntervals = repository.syncedIntervals.first().toMutableList()
+            var allIntervals = syncIntervalRepository.syncedIntervals.first().toMutableList()
             if (allIntervals.none { it.start == 0L }) allIntervals.add(0, TimeInterval(0, 0))
             allIntervals.sortBy { it.start }
 
@@ -68,14 +69,14 @@ class FullScanService : Service() {
                 val interval2 = allIntervals[1]
 
                 val photosInGap =
-                    scanner.getPhotosInInterval(interval1.end + 1, interval2.start - 1)
+                    galleryRepository.getPhotosInInterval(interval1.end + 1, interval2.start - 1)
 
                 if (photosInGap.isNotEmpty()) {
                     // Define a simple progress-saving lambda. Its ONLY job is to update interval1's end.
                     val onBatchSave: suspend (Long) -> Unit = { newEndTimestamp ->
                         val updatedInterval1 = interval1.copy(end = newEndTimestamp)
                         allIntervals[0] = updatedInterval1 // Update the interval in the list
-                        repository.saveSyncedIntervals(allIntervals) // Save the entire list for crash recovery
+                        syncIntervalRepository.saveSyncedIntervals(allIntervals) // Save the entire list for crash recovery
                     }
 
                     // Pass the progress-saving lambda to the sync function.
@@ -100,18 +101,18 @@ class FullScanService : Service() {
                 allIntervals.removeAt(0)
                 allIntervals.add(0, merged)
                 // Save the final merged state
-                repository.saveSyncedIntervals(allIntervals)
+                syncIntervalRepository.saveSyncedIntervals(allIntervals)
             }
 
             // The rest of the logic for syncing the tail end
             coroutineContext.ensureActive()
             val finalInterval = allIntervals.first()
-            val photosInTail = scanner.getPhotos(startTimeSeconds = finalInterval.end + 1)
+            val photosInTail = galleryRepository.getPhotos(startTimeSeconds = finalInterval.end + 1)
             if (photosInTail.isNotEmpty()) {
                 val onBatchSave: suspend (Long) -> Unit = { newEndTimestamp ->
                     val updatedInterval = finalInterval.copy(end = newEndTimestamp)
                     allIntervals[0] = updatedInterval
-                    repository.saveSyncedIntervals(allIntervals)
+                    syncIntervalRepository.saveSyncedIntervals(allIntervals)
                 }
                 syncAndSaveInBatches(coroutineContext, photosInTail, "Finalizing...", onBatchSave)
             }
@@ -138,7 +139,10 @@ class FullScanService : Service() {
 
         photos.forEachIndexed { index, photo ->
             context.ensureActive()
-            scanner.uploadPhoto(photo)
+            // TODO: FileUploader.startSendFileAsync(File(photo.path))
+            //  include path to GalleryPhoto class & include communicationLib in build gradle            delay(1000)
+            println("Uploaded ${photo.displayName}")
+
             lastSyncedTimestamp = photo.dateAdded
             updateStatus(true, "$statusPrefix (${index + 1}/${photos.size})")
 

@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.cloud.sync.data.ui_state.SyncUiState
 import com.cloud.sync.data.TimeInterval
-import com.cloud.sync.repository.SyncRepository
+import com.cloud.sync.repository.ISyncRepository
 import com.cloud.sync.service.FullScanService
 import com.cloud.sync.service.SyncStatusManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,11 +21,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class SyncViewModel(application: Application) : AndroidViewModel(application) {
 
     private val context = application.applicationContext
-    private val repository = SyncRepository(context)
+    @Inject
+    lateinit var syncRepository: ISyncRepository
+
     private val workManager = WorkManager.getInstance(context)
     private val workRequestTag = "periodic-photo-sync"
 
@@ -66,17 +69,17 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun scheduleFromNowSync() {
         // Check if this is the very first time the user is enabling this feature.
-        if (repository.syncFromNowPoint.first() == 0L) {
+        if (syncRepository.syncFromNowPoint.first() == 0L) {
             // Get the current time in seconds, which is what MediaStore uses.
             val syncStartTime = System.currentTimeMillis() / 1000
 
             // Create the new anchor interval using the current time.
             val newInterval = TimeInterval(start = syncStartTime, end = syncStartTime)
-            val currentIntervals = repository.syncedIntervals.first()
+            val currentIntervals = syncRepository.syncedIntervals.first()
             val allIntervals = currentIntervals + newInterval
 
-            repository.saveSyncFromNowPoint(syncStartTime)
-            repository.saveSyncedIntervals(allIntervals)
+            syncRepository.saveSyncFromNowPoint(syncStartTime)
+            syncRepository.saveSyncedIntervals(allIntervals)
         }
 
         val request = PeriodicWorkRequestBuilder<PhotoSyncWorker>(15, TimeUnit.MINUTES) // Use a reasonable interval
@@ -87,7 +90,7 @@ class SyncViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun cancelFromNowSync() {
-        repository.deleteSyncFromNowPoint()
+        syncRepository.deleteSyncFromNowPoint()
         workManager.cancelAllWorkByTag(workRequestTag)
     }
 }

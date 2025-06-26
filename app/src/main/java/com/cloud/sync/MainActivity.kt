@@ -1,11 +1,9 @@
 package com.cloud.sync
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.core.content.ContextCompat
 import com.cloud.sync.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
