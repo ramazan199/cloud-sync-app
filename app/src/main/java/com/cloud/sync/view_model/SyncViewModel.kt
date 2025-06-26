@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
-import com.cloud.sync.data.SyncUiState
+import com.cloud.sync.data.ui_state.SyncUiState
 import com.cloud.sync.data.TimeInterval
 import com.cloud.sync.repository.SyncRepository
 import com.cloud.sync.service.FullScanService

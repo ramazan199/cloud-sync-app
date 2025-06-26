@@ -5,7 +5,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.journeyapps.barcodescanner.ScanOptions
-import com.cloud.sync.data.ScanUiState
+import com.cloud.sync.data.ui_state.ScanUiState
 import com.cloud.sync.service.IPermissionsManager
 import com.cloud.sync.service.IQRScanner
 import com.cloud.sync.service.PermissionSet

@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.cloud.sync.data.ScanUiState
+import com.cloud.sync.data.ui_state.ScanUiState
 import com.cloud.sync.view_model.ScanViewModel
 import com.journeyapps.barcodescanner.ScanContract
 
