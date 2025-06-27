@@ -8,12 +8,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.cloud.sync.view_model.SyncViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SyncScreen(syncViewModel: SyncViewModel = viewModel()) {
+fun SyncScreen(syncViewModel: SyncViewModel = hiltViewModel()) {
     val uiState by syncViewModel.uiState.collectAsState()
 
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {

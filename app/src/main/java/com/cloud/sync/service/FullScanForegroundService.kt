@@ -8,14 +8,15 @@ import com.cloud.sync.data.GalleryPhoto
 import com.cloud.sync.data.TimeInterval
 import com.cloud.sync.repository.IGalleryRepository
 import com.cloud.sync.repository.ISyncRepository
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
-class FullScanService : Service() {
-
+@AndroidEntryPoint
+class FullScanForegroundService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     @Inject
     lateinit var syncIntervalRepository: ISyncRepository
@@ -171,7 +172,7 @@ class FullScanService : Service() {
         notificationManager.createNotificationChannel(channel)
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Gallery Sync").setContentText(text)
-            .setSmallIcon(android.R.drawable.ic_popup_sync) // Replace with icon
+            .setSmallIcon(android.R.drawable.ic_popup_sync)
             .setOngoing(true).build()
     }
 

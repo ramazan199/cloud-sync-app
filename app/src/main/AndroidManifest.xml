@@ -62,7 +62,7 @@
 
         <!-- Declare the Foreground Service -->
         <service
-            android:name=".service.FullScanService"
+            android:name=".service.FullScanForegroundService"
             android:foregroundServiceType="dataSync"
             android:exported="false" />
 
