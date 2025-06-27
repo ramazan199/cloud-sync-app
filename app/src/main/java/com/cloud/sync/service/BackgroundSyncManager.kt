@@ -1,6 +1,5 @@
 package com.cloud.sync.service
 
-import PhotoSyncWorker
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
@@ -92,7 +91,7 @@ class BackgroundSyncManager @Inject constructor(
             .addTag(periodicWorkTag)
             .build()
 
-        workManager.enqueueUniquePeriodicWork("UniquePhotoSyncWork", ExistingPeriodicWorkPolicy.KEEP, request)
+        workManager.enqueueUniquePeriodicWork("PhotoSyncWork", ExistingPeriodicWorkPolicy.KEEP, request)
     }
 
     override suspend fun cancelPeriodicSync() {

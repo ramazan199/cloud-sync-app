@@ -25,9 +25,9 @@ class FullScanForegroundService : Service() {
     private lateinit var notificationManager: NotificationManager
 
     companion object {
-        const val ACTION_START = "ACTION_START";
+        const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
-        private const val NOTIFICATION_CHANNEL_ID = "FullScanChannel";
+        private const val NOTIFICATION_CHANNEL_ID = "FullScanChannel"
         private const val NOTIFICATION_ID = 1
     }
 

@@ -1,7 +1,5 @@
 package com.cloud.sync.di
 
-import com.cloud.sync.service.BackgroundSyncManager
-import com.cloud.sync.service.IBackgroundSyncManager
 import com.cloud.sync.service.IPermissionsManager
 import com.cloud.sync.service.IQRScanner
 import com.cloud.sync.service.PermissionsManager
