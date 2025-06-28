@@ -1,11 +1,11 @@
 // src/main/java/com/cloud/sync.view_model/SyncViewModel.kt
-package com.cloud.sync.view_model
+package com.cloud.sync.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cloud.sync.data.ui_state.SyncUiState
-import com.cloud.sync.service.IBackgroundSyncManager
-import com.cloud.sync.service.SyncStatusManager
+import com.cloud.sync.mananager.IBackgroundSyncManager
+import com.cloud.sync.common.SyncStatusManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

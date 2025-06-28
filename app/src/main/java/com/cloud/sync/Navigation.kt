@@ -1,14 +1,13 @@
 package com.cloud.sync
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
-import com.cloud.sync.screen.AuthScreen
-import com.cloud.sync.screen.ScanScreen
-import com.cloud.sync.screen.SyncScreen
+import com.cloud.sync.ui.screens.AuthScreen
+import com.cloud.sync.ui.screens.ScanScreen
+import com.cloud.sync.ui.screens.SyncScreen
+
 
 @Composable
 fun AppNavigation() {
@@ -16,7 +15,6 @@ fun AppNavigation() {
 
     // Check if we're in debug mode
     if (BuildConfig.DEBUG) {
-
         LaunchedEffect(Unit) {
             // Navigate directly to SyncScreen with dummy content
             navController.navigate("sync") {

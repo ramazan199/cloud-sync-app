@@ -1,4 +1,4 @@
-package com.cloud.sync.service
+package com.cloud.sync.background
 
 import androidx.activity.result.ActivityResultLauncher
 import com.journeyapps.barcodescanner.ScanOptions

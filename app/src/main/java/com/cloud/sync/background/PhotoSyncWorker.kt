@@ -1,26 +1,32 @@
-package com.cloud.sync.service
+package com.cloud.sync.background
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.cloud.sync.data.GalleryPhoto
-import com.cloud.sync.data.TimeInterval
-import com.cloud.sync.repository.IGalleryRepository
-import com.cloud.sync.repository.ISyncRepository
+import com.cloud.sync.data.repository.IGalleryRepository
+import com.cloud.sync.data.repository.ISyncRepository
+import com.cloud.sync.mananager.ISyncIntervalManager
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-class PhotoSyncWorker(appContext: Context, params: WorkerParameters) :
-    CoroutineWorker(appContext, params) {
 
-    @Inject
-    lateinit var syncRepository: ISyncRepository
 
-    @Inject
-    lateinit var galleryRepository: IGalleryRepository
+@HiltWorker
+class PhotoSyncWorker @AssistedInject constructor(
+    @Assisted appContext: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val syncRepository: ISyncRepository,
+    private val galleryRepository: IGalleryRepository,
+    private val syncIntervalManager: ISyncIntervalManager
+) : CoroutineWorker(appContext, workerParams) {
+
     override suspend fun doWork(): Result {
         println("Worker: Starting periodic 'From Now' sync check.")
         try {
@@ -47,11 +53,11 @@ class PhotoSyncWorker(appContext: Context, params: WorkerParameters) :
 
             println("Worker: Found ${photosToSync.size} new photos. Starting upload...")
 
-            // Define the specific action for what to do when a batch is saved.
             val onBatchSave: suspend (Long) -> Unit = { newTimestamp ->
                 val updatedInterval = fromNowInterval.copy(end = newTimestamp)
                 allIntervals[fromNowIntervalIndex] = updatedInterval
-                syncRepository.saveSyncedIntervals(mergeIntervals(allIntervals))
+                // Use the injected SyncEngine
+                syncRepository.saveSyncedIntervals(syncIntervalManager.mergeIntervals(allIntervals))
                 println("Worker: Saved batch progress. New end is $newTimestamp")
             }
 
@@ -68,53 +74,36 @@ class PhotoSyncWorker(appContext: Context, params: WorkerParameters) :
         }
     }
 
-    private fun mergeIntervals(intervals: List<TimeInterval>): List<TimeInterval> {
-        if (intervals.isEmpty()) return emptyList()
-        val sorted = intervals.sortedBy { it.start }
-        val merged = mutableListOf<TimeInterval>()
-        var current = sorted.first()
-        for (i in 1 until sorted.size) {
-            val next = sorted[i]
-            if (next.start <= current.end + 1) {
-                current = current.copy(end = maxOf(current.end, next.end))
-            } else {
-                merged.add(current)
-                current = next
-            }
-        }
-        merged.add(current)
-        return merged
-    }
-
+    // This logic should be in a separate, injectable SyncEngine class, not duplicated here.
+    // private fun mergeIntervals(intervals: List<TimeInterval>): List<TimeInterval> { ... }
 
     private suspend fun syncAndSaveInBatches(
         photos: List<GalleryPhoto>,
         initialTimestamp: Long,
         onBatchSave: suspend (Long) -> Unit
     ) {
+        // You should get this from a repository or a configuration class, not hardcode it.
+        // For now, this is fine for demonstration.
         val batchSize = 10
         var photosInBatch = 0
         var lastSyncedTimestamp = initialTimestamp
 
         for (photo in photos) {
-            // Check for cancellation before processing each photo
+            coroutineContext.ensureActive()
+
             withContext(Dispatchers.IO) {
-                // TODO: FileUploader.startSendFileAsync(File(photo.path))
-                //  include path to GalleryPhoto class & include communicationLib in build gradle
                 delay(1000)
                 println("Uploaded ${photo.displayName}")
-
             }
             lastSyncedTimestamp = photo.dateAdded
 
             photosInBatch++
             if (photosInBatch >= batchSize) {
                 onBatchSave(lastSyncedTimestamp)
-                photosInBatch = 0 // Reset for the next batch
+                photosInBatch = 0
             }
         }
 
-        // Save any remaining photos that didn't make a full batch
         if (photosInBatch > 0) {
             onBatchSave(lastSyncedTimestamp)
         }

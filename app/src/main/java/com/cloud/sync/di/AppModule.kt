@@ -1,12 +1,13 @@
 package com.cloud.sync.di
 
-import com.cloud.sync.service.BackgroundSyncManager
-import com.cloud.sync.service.IBackgroundSyncManager
+import com.cloud.sync.mananager.BackgroundSyncManager
+import com.cloud.sync.mananager.IBackgroundSyncManager
+import com.cloud.sync.mananager.ISyncIntervalManager
+import com.cloud.sync.mananager.SyncIntervalManager
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 //application-wide singletons
 @Module
@@ -14,8 +15,12 @@ import javax.inject.Singleton
 abstract class AppModule {
 
     @Binds
-    @Singleton
     abstract fun bindBackgroundSyncManager(
         impl: BackgroundSyncManager
     ): IBackgroundSyncManager
+
+    @Binds
+    abstract fun bindSyncIntervalManager(
+        impl: SyncIntervalManager
+    ): ISyncIntervalManager
 }

@@ -1,4 +1,4 @@
-package com.cloud.sync.service
+package com.cloud.sync.mananager
 
 import android.content.Context
 import android.content.Intent
@@ -9,8 +9,10 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.cloud.sync.background.FullScanService
+import com.cloud.sync.background.PhotoSyncWorker
 import com.cloud.sync.data.TimeInterval
-import com.cloud.sync.repository.ISyncRepository
+import com.cloud.sync.data.repository.ISyncRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -45,13 +47,13 @@ interface IBackgroundSyncManager {
     suspend fun cancelPeriodicSync()
 
     /**
-     * Initiates a full photo scan by starting the [FullScanForegroundService] as a foreground service.
+     * Initiates a full photo scan by starting the [com.cloud.sync.background.FullScanService] as a foreground service.
      * This operation processes all existing photos on the device.
      */
     fun startFullScanService()
 
     /**
-     * Stops the currently running [FullScanForegroundService], halting any ongoing full scan.
+     * Stops the currently running [com.cloud.sync.background.PhotoSyncWorker], halting any ongoing full scan.
      */
     fun stopFullScanService()
 
@@ -91,7 +93,7 @@ class BackgroundSyncManager @Inject constructor(
             .addTag(periodicWorkTag)
             .build()
 
-        workManager.enqueueUniquePeriodicWork("PhotoSyncWork", ExistingPeriodicWorkPolicy.KEEP, request)
+        workManager.enqueueUniquePeriodicWork("UniquePhotoSyncWork", ExistingPeriodicWorkPolicy.KEEP, request)
     }
 
     override suspend fun cancelPeriodicSync() {
@@ -100,12 +102,16 @@ class BackgroundSyncManager @Inject constructor(
     }
 
     override fun startFullScanService() {
-        val intent = Intent(context, FullScanForegroundService::class.java).apply { action = FullScanForegroundService.ACTION_START }
+        val intent = Intent(context, FullScanService::class.java).apply {
+            action = FullScanService.ACTION_START
+        }
         ContextCompat.startForegroundService(context, intent)
     }
 
     override fun stopFullScanService() {
-        val intent = Intent(context, FullScanForegroundService::class.java).apply { action = FullScanForegroundService.ACTION_STOP }
+        val intent = Intent(context, FullScanService::class.java).apply {
+            action = FullScanService.ACTION_STOP
+        }
         context.startService(intent)
     }
 

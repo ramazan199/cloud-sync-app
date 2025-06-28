@@ -1,8 +1,9 @@
-package com.cloud.sync.view_model
+package com.cloud.sync.ui.viewmodel
 
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cloud.sync.data.ui_state.AuthUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,19 +13,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// Represents the state of the authentication screen
-data class AuthUiState(
-    val pin: String = "",
-    val isLoading: Boolean = false,
-    val isAuthenticated: Boolean = false,
-    val errorMessage: String? = null
-)
 
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
 
     // Private mutable state flow
     private val _uiState = MutableStateFlow(AuthUiState())
+
     // Public read-only state flow
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 

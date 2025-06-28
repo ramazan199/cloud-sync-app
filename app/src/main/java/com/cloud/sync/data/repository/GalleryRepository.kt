@@ -1,4 +1,4 @@
-package com.cloud.sync.repository
+package com.cloud.sync.data.repository
 
 import android.content.Context
 import android.os.Environment

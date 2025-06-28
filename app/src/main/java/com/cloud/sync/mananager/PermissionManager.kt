@@ -1,7 +1,9 @@
-package com.cloud.sync.service
+package com.cloud.sync.background
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.scopes.ViewModelScoped
@@ -42,14 +44,14 @@ class PermissionsManager @Inject constructor() : IPermissionsManager {
 sealed class PermissionSet(val permissions: Set<String>) {
     companion object {
         // Common permission sets
-        val CAMERA = setOf(android.Manifest.permission.CAMERA)
-        val STORAGE = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+        val CAMERA = setOf(Manifest.permission.CAMERA)
+        val STORAGE = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             setOf(
-                android.Manifest.permission.READ_MEDIA_IMAGES,
-                android.Manifest.permission.READ_MEDIA_VIDEO
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_VIDEO
             )
         } else {
-            setOf(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            setOf(Manifest.permission.READ_EXTERNAL_STORAGE)
         }
     }
 

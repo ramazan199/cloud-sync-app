@@ -1,14 +1,15 @@
-package com.cloud.sync.view_model
+package com.cloud.sync.ui.viewmodel
 
+import android.Manifest
 import android.content.Context
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.journeyapps.barcodescanner.ScanOptions
 import com.cloud.sync.data.ui_state.ScanUiState
-import com.cloud.sync.service.IPermissionsManager
-import com.cloud.sync.service.IQRScanner
-import com.cloud.sync.service.PermissionSet
+import com.cloud.sync.background.IPermissionsManager
+import com.cloud.sync.background.IQRScanner
+import com.cloud.sync.background.PermissionSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +34,7 @@ class ScanViewModel @Inject constructor(
     }
 
     fun handlePermissionResult(permissions: Map<String, Boolean>) {
-        if (permissions.getOrDefault(android.Manifest.permission.CAMERA, false)) {
+        if (permissions.getOrDefault(Manifest.permission.CAMERA, false)) {
             startQRScanner()
         } else {
             viewModelScope.launch {

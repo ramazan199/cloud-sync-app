@@ -1,10 +1,10 @@
 package com.cloud.sync.di
 
 import android.content.Context
-import com.cloud.sync.repository.GalleryRepositoryImpl
-import com.cloud.sync.repository.IGalleryRepository
-import com.cloud.sync.repository.ISyncRepository
-import com.cloud.sync.repository.SyncRepositoryImpl
+import com.cloud.sync.data.repository.GalleryRepositoryImpl
+import com.cloud.sync.data.repository.IGalleryRepository
+import com.cloud.sync.data.repository.ISyncRepository
+import com.cloud.sync.data.repository.SyncRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

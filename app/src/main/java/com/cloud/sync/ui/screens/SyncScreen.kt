@@ -1,4 +1,4 @@
-package com.cloud.sync.screen
+package com.cloud.sync.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.cloud.sync.view_model.SyncViewModel
+import com.cloud.sync.ui.viewmodel.SyncViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

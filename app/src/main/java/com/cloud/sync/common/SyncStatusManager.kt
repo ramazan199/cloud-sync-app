@@ -1,4 +1,4 @@
-package com.cloud.sync.service
+package com.cloud.sync.common
 
 import com.cloud.sync.data.SyncProgress
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 /**
  * A singleton object to manage and broadcast the state of the full scan.
  * The Service writes to it, and the ViewModel reads from it.
+ * Implementation of Observable pattern.
  */
 object SyncStatusManager {
 private val _progress = MutableStateFlow(SyncProgress())

@@ -69,6 +69,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.androidx.datastore.core.android)
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -80,7 +82,8 @@ dependencies {
     // Hilt & Ksp dependencies
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
-
+    ksp(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.compiler)
     // QR Code Scanner dependencies
     implementation(libs.zxing.android.embedded)
     implementation(libs.zxing.core)

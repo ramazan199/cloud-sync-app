@@ -1,4 +1,4 @@
-package com.cloud.sync.screen
+package com.cloud.sync.ui.screens
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,7 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cloud.sync.data.ui_state.ScanUiState
-import com.cloud.sync.view_model.ScanViewModel
+import com.cloud.sync.ui.viewmodel.ScanViewModel
 import com.journeyapps.barcodescanner.ScanContract
 
 // ScanScreen.kt

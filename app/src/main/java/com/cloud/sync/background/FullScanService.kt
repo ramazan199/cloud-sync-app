@@ -1,13 +1,14 @@
-package com.cloud.sync.service
+package com.cloud.sync.background
 
 import android.app.*
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.cloud.sync.common.SyncStatusManager
 import com.cloud.sync.data.GalleryPhoto
 import com.cloud.sync.data.TimeInterval
-import com.cloud.sync.repository.IGalleryRepository
-import com.cloud.sync.repository.ISyncRepository
+import com.cloud.sync.data.repository.IGalleryRepository
+import com.cloud.sync.data.repository.ISyncRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -16,7 +17,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
 @AndroidEntryPoint
-class FullScanForegroundService : Service() {
+class FullScanService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     @Inject
     lateinit var syncIntervalRepository: ISyncRepository
