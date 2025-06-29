@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.cloud.sync.common.SyncStatusManager
+import com.cloud.sync.config.SyncConfig
 import com.cloud.sync.data.GalleryPhoto
 import com.cloud.sync.data.TimeInterval
 import com.cloud.sync.data.repository.IGalleryRepository
@@ -23,6 +24,8 @@ class FullScanService : Service() {
     lateinit var syncIntervalRepository: ISyncRepository
     @Inject
     lateinit var galleryRepository: IGalleryRepository
+    @Inject
+    lateinit var syncConfig: SyncConfig
     private lateinit var notificationManager: NotificationManager
 
     companion object {
@@ -135,7 +138,7 @@ class FullScanService : Service() {
         statusPrefix: String,
         onBatchSave: suspend (Long) -> Unit
     ) {
-        val batchSize = 10
+        val batchSize = syncConfig.batchSize
         var photosInBatch = 0
         var lastSyncedTimestamp = 0L
 

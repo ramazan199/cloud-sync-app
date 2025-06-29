@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.cloud.sync.config.SyncConfig
 import com.cloud.sync.data.GalleryPhoto
 import com.cloud.sync.data.repository.IGalleryRepository
 import com.cloud.sync.data.repository.ISyncRepository
@@ -23,7 +24,8 @@ class PhotoSyncWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val syncRepository: ISyncRepository,
     private val galleryRepository: IGalleryRepository,
-    private val syncIntervalManager: ISyncIntervalManager
+    private val syncIntervalManager: ISyncIntervalManager,
+    private val syncConfig: SyncConfig
 ) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
@@ -77,8 +79,7 @@ class PhotoSyncWorker @AssistedInject constructor(
         initialTimestamp: Long,
         onBatchSave: suspend (Long) -> Unit
     ) = coroutineScope {
-        // TODO: get this from conf class
-        val batchSize = 10
+        val batchSize = syncConfig.batchSize
         var photosInBatch = 0
         var lastSyncedTimestamp = initialTimestamp
 
