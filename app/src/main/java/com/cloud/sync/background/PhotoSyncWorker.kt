@@ -11,12 +11,11 @@ import com.cloud.sync.mananager.ISyncIntervalManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-
-
 
 @HiltWorker
 class PhotoSyncWorker @AssistedInject constructor(
@@ -56,7 +55,6 @@ class PhotoSyncWorker @AssistedInject constructor(
             val onBatchSave: suspend (Long) -> Unit = { newTimestamp ->
                 val updatedInterval = fromNowInterval.copy(end = newTimestamp)
                 allIntervals[fromNowIntervalIndex] = updatedInterval
-                // Use the injected SyncEngine
                 syncRepository.saveSyncedIntervals(syncIntervalManager.mergeIntervals(allIntervals))
                 println("Worker: Saved batch progress. New end is $newTimestamp")
             }
@@ -74,30 +72,27 @@ class PhotoSyncWorker @AssistedInject constructor(
         }
     }
 
-    // This logic should be in a separate, injectable SyncEngine class, not duplicated here.
-    // private fun mergeIntervals(intervals: List<TimeInterval>): List<TimeInterval> { ... }
-
     private suspend fun syncAndSaveInBatches(
         photos: List<GalleryPhoto>,
         initialTimestamp: Long,
         onBatchSave: suspend (Long) -> Unit
-    ) {
-        // You should get this from a repository or a configuration class, not hardcode it.
-        // For now, this is fine for demonstration.
+    ) = coroutineScope {
+        // TODO: get this from conf class
         val batchSize = 10
         var photosInBatch = 0
         var lastSyncedTimestamp = initialTimestamp
 
         for (photo in photos) {
-            coroutineContext.ensureActive()
+            ensureActive()
 
             withContext(Dispatchers.IO) {
                 delay(1000)
                 println("Uploaded ${photo.displayName}")
             }
-            lastSyncedTimestamp = photo.dateAdded
 
+            lastSyncedTimestamp = photo.dateAdded
             photosInBatch++
+
             if (photosInBatch >= batchSize) {
                 onBatchSave(lastSyncedTimestamp)
                 photosInBatch = 0

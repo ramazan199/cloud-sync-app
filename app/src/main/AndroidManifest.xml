@@ -42,28 +42,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <!-- intent-filter for deep link -->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.VIEW" />-->
-<!--                <category android:name="android.intent.category.DEFAULT" />-->
-<!--                <category android:name="android.intent.category.BROWSABLE" />-->
-<!--                <data-->
-<!--                    android:scheme="test"-->
-<!--                    android:host="debug"-->
-<!--                    android:pathPrefix="/sync-screen"/>-->
-<!--            </intent-filter>-->
         </activity>
         <!-- QR Scanner Activity -->
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
-        <!-- Service -->
-<!--        <service-->
-<!--            android:name=".zother.ServiceBgUpload"-->
-<!--            android:exported="false"-->
-<!--            android:foregroundServiceType="dataSync" />-->
 
         <!-- Declare the Foreground Service -->
         <service

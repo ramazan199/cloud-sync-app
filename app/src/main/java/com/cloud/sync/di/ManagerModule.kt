@@ -1,9 +1,9 @@
 package com.cloud.sync.di
 
-import com.cloud.sync.background.IPermissionsManager
-import com.cloud.sync.background.IQRScanner
-import com.cloud.sync.background.PermissionsManager
-import com.cloud.sync.background.QRScanner
+import com.cloud.sync.mananager.IPermissionsManager
+import com.cloud.sync.mananager.IQRScanner
+import com.cloud.sync.mananager.PermissionsManager
+import com.cloud.sync.mananager.QRScanner
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,5 +27,4 @@ abstract class ManagerModule {
     abstract fun bindQRScanner(
         impl: QRScanner
     ): IQRScanner
-
 }

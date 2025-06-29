@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.asStateFlow
  * Implementation of Observable pattern.
  */
 object SyncStatusManager {
-private val _progress = MutableStateFlow(SyncProgress())
-val progress = _progress.asStateFlow()
+    private val _progress = MutableStateFlow(SyncProgress())
+    val progress = _progress.asStateFlow()
 
-fun update(isSyncing: Boolean, text: String) {
-    _progress.value = SyncProgress(isSyncing, text)
-}
+    fun update(isSyncing: Boolean, text: String) {
+        _progress.value = SyncProgress(isSyncing, text)
+    }
 
-fun isSyncing(): Boolean {
-    return _progress.value.isSyncing
-}
+    fun isSyncing(): Boolean {
+        return _progress.value.isSyncing
+    }
 }

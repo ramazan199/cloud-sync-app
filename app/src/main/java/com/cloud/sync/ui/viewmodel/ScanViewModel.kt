@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.journeyapps.barcodescanner.ScanOptions
 import com.cloud.sync.data.ui_state.ScanUiState
-import com.cloud.sync.background.IPermissionsManager
-import com.cloud.sync.background.IQRScanner
-import com.cloud.sync.background.PermissionSet
+import com.cloud.sync.mananager.IPermissionsManager
+import com.cloud.sync.mananager.IQRScanner
+import com.cloud.sync.mananager.PermissionSet
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

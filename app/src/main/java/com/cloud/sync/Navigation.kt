@@ -16,7 +16,7 @@ fun AppNavigation() {
     // Check if we're in debug mode
     if (BuildConfig.DEBUG) {
         LaunchedEffect(Unit) {
-            // Navigate directly to SyncScreen with dummy content
+            // Navigate directly to SyncScreen
             navController.navigate("sync") {
                 popUpTo(0) // Clear back stack
             }

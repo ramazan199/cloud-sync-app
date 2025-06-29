@@ -17,10 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
 
-    // Private mutable state flow
     private val _uiState = MutableStateFlow(AuthUiState())
 
-    // Public read-only state flow
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     /**
@@ -33,29 +31,21 @@ class AuthViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    /**
-     * Simulates the authentication process.
-     * This is where you would put your actual authentication logic.
-     */
     fun authenticate() {
         viewModelScope.launch {
             // Set loading state to true
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
             try {
-                // --- YOUR AUTHENTICATION LOGIC GOES HERE ---
-                // For demonstration, we'll simulate a network call
-                delay(2000) // Simulate a 2-second delay
+                // TODO: Replace this with your actual authentication logic
+                delay(2000)
 
-                // Example: Check if the PIN is correct (e.g., "123456")
                 if (uiState.value.pin == "123456") {
                     _uiState.update { it.copy(isAuthenticated = true, isLoading = false) }
                 } else {
                     // Handle incorrect PIN
                     throw Exception("Invalid PIN. Please try again.")
                 }
-                // --- END OF YOUR AUTHENTICATION LOGIC ---
-
             } catch (e: Exception) {
                 // Handle any errors during authentication
                 _uiState.update {

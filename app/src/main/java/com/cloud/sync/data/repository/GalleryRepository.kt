@@ -33,7 +33,6 @@ class GalleryRepositoryImpl @Inject constructor( private val context: Context) :
         return queryPhotos(startTimeSeconds = startTimeSeconds)
     }
 
-
     override fun getPhotosInInterval(start: Long, end: Long): List<GalleryPhoto> {
         if (start > end) return emptyList()
         return queryPhotos(startTimeSeconds = start, endTimeSeconds = end)

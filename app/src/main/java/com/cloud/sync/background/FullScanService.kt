@@ -74,14 +74,14 @@ class FullScanService : Service() {
                     galleryRepository.getPhotosInInterval(interval1.end + 1, interval2.start - 1)
 
                 if (photosInGap.isNotEmpty()) {
-                    // Define a simple progress-saving lambda. Its ONLY job is to update interval1's end.
+                    // Its ONLY job is to update interval1's end.
                     val onBatchSave: suspend (Long) -> Unit = { newEndTimestamp ->
                         val updatedInterval1 = interval1.copy(end = newEndTimestamp)
                         allIntervals[0] = updatedInterval1 // Update the interval in the list
                         syncIntervalRepository.saveSyncedIntervals(allIntervals) // Save the entire list for crash recovery
                     }
 
-                    // Pass the progress-saving lambda to the sync function.
+                    // Passing the progress-saving lambda to the sync function.
                     syncAndSaveInBatches(
                         coroutineContext,
                         photosInGap,
@@ -102,7 +102,7 @@ class FullScanService : Service() {
                 allIntervals.removeAt(0)
                 allIntervals.removeAt(0)
                 allIntervals.add(0, merged)
-                // Save the final merged state
+                // Saving the final merged state
                 syncIntervalRepository.saveSyncedIntervals(allIntervals)
             }
 
@@ -142,7 +142,8 @@ class FullScanService : Service() {
         photos.forEachIndexed { index, photo ->
             context.ensureActive()
             // TODO: FileUploader.startSendFileAsync(File(photo.path))
-            //  include path to GalleryPhoto class & include communicationLib in build gradle            delay(1000)
+            //  include path to GalleryPhoto class & include communicationLib in build gradle
+            delay(1000)
             println("Uploaded ${photo.displayName}")
 
             lastSyncedTimestamp = photo.dateAdded
@@ -153,7 +154,7 @@ class FullScanService : Service() {
                 photosInBatch = 0
             }
         }
-        // Save any remaining photos that didn't make a full batch
+        // Saving any remaining photos that didn't make a full batch
         if (photosInBatch > 0) {
             onBatchSave(lastSyncedTimestamp)
         }

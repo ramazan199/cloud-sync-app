@@ -1,4 +1,3 @@
-// src/main/java/com/cloud/sync.view_model/SyncViewModel.kt
 package com.cloud.sync.ui.viewmodel
 
 import androidx.lifecycle.ViewModel

@@ -69,8 +69,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose.android)
     implementation(libs.androidx.datastore.core.android)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.hilt.common)
-    implementation(libs.androidx.hilt.work)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,23 +78,25 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    // Hilt & Ksp dependencies
+    // Hilt(+navigation) & Ksp dependencies
     implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
     ksp(libs.androidx.hilt.compiler)
-    ksp(libs.hilt.compiler)
+    ksp(libs.hilt.android.compiler)
+    // ksp(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
     // QR Code Scanner dependencies
     implementation(libs.zxing.android.embedded)
     implementation(libs.zxing.core)
-
-    implementation(libs.hilt.navigation.compose)
 
     // Retrofit dependencies
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)
 
     // bouncy castle
-    implementation(libs.bouncycastle){
+    implementation(libs.bouncycastle) {
         {
             exclude("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
         }
@@ -107,7 +108,5 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
-
 //    implementation(project(":communicationLib"))
-
 }

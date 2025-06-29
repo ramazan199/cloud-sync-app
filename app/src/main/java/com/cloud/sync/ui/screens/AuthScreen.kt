@@ -23,10 +23,8 @@ fun AuthScreen(
     authViewModel: AuthViewModel = viewModel(),
     onAuthenticationSuccess: () -> Unit
 ) {
-    // Collect the UI state from the ViewModel
     val uiState by authViewModel.uiState.collectAsState()
 
-    // Listen for the authentication success event
     LaunchedEffect(uiState.isAuthenticated) {
         if (uiState.isAuthenticated) {
             onAuthenticationSuccess()
@@ -36,7 +34,6 @@ fun AuthScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            // Use the background color from the theme
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
@@ -46,7 +43,6 @@ fun AuthScreen(
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 28.dp),
-            // Use the surface color from the theme for the card background
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
             Column(
@@ -59,14 +55,12 @@ fun AuthScreen(
                 Text(
                     text = "Enter Your PIN",
                     style = MaterialTheme.typography.headlineMedium,
-                    // Use the primary text color from the theme
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Enter the 6-digit PIN from the cloud.",
                     style = MaterialTheme.typography.bodyMedium,
-                    // Use a secondary text color from the theme
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(32.dp))
@@ -145,7 +139,6 @@ fun PinInputField(
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .background(
-                                // Use a surface variant or surface color for the background of the input boxes
                                 color = MaterialTheme.colorScheme.surfaceVariant,
                                 shape = RoundedCornerShape(8.dp)
                             ),

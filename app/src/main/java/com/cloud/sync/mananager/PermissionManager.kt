@@ -1,4 +1,4 @@
-package com.cloud.sync.background
+package com.cloud.sync.mananager
 
 import android.Manifest
 import android.content.Context
@@ -55,7 +55,7 @@ sealed class PermissionSet(val permissions: Set<String>) {
         }
     }
 
-    // Define specific permission sets here
+    // specific permission sets
     object Camera : PermissionSet(CAMERA)
     object Storage : PermissionSet(STORAGE)
 

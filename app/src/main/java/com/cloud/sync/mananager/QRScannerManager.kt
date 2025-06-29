@@ -1,4 +1,4 @@
-package com.cloud.sync.background
+package com.cloud.sync.mananager
 
 import androidx.activity.result.ActivityResultLauncher
 import com.journeyapps.barcodescanner.ScanOptions
