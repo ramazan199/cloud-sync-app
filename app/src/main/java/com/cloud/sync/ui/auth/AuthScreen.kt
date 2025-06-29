@@ -1,4 +1,4 @@
-package com.cloud.sync.ui.screens
+package com.cloud.sync.ui.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.cloud.sync.ui.viewmodel.AuthViewModel
 
 @Composable
 fun AuthScreen(

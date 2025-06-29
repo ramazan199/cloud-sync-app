@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-import com.cloud.sync.config.SyncConfig
+import com.cloud.sync.common.config.SyncConfig
 @Module
 @InstallIn(SingletonComponent::class)
 object ConfigModule {

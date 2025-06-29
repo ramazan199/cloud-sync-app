@@ -1,4 +1,4 @@
-package com.cloud.sync.data.ui_state
+package com.cloud.sync.ui.auth
 
 // Represents the state of the authentication screen
 data class AuthUiState(

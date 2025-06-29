@@ -1,6 +1,6 @@
 package com.cloud.sync.mananager
 
-import com.cloud.sync.data.TimeInterval
+import com.cloud.sync.domain.model.TimeInterval
 import javax.inject.Inject
 
 interface ISyncIntervalManager {

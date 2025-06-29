@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.cloud.sync.common.SyncStatusManager
-import com.cloud.sync.config.SyncConfig
-import com.cloud.sync.data.GalleryPhoto
-import com.cloud.sync.data.TimeInterval
-import com.cloud.sync.data.repository.IGalleryRepository
-import com.cloud.sync.data.repository.ISyncRepository
+import com.cloud.sync.common.config.SyncConfig
+import com.cloud.sync.domain.model.GalleryPhoto
+import com.cloud.sync.domain.model.TimeInterval
+import com.cloud.sync.domain.repositroy.IGalleryRepository
+import com.cloud.sync.domain.repositroy.ISyncRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first

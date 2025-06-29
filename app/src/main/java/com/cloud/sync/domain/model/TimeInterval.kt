@@ -1,4 +1,4 @@
-package com.cloud.sync.data
+package com.cloud.sync.domain.model
 
 import kotlinx.serialization.Serializable
 

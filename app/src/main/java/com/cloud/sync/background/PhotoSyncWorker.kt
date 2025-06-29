@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.cloud.sync.config.SyncConfig
-import com.cloud.sync.data.GalleryPhoto
-import com.cloud.sync.data.repository.IGalleryRepository
-import com.cloud.sync.data.repository.ISyncRepository
+import com.cloud.sync.common.config.SyncConfig
+import com.cloud.sync.domain.model.GalleryPhoto
+import com.cloud.sync.domain.repositroy.IGalleryRepository
+import com.cloud.sync.domain.repositroy.ISyncRepository
 import com.cloud.sync.mananager.ISyncIntervalManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject

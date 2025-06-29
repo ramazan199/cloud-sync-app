@@ -1,4 +1,4 @@
-package com.cloud.sync.data
+package com.cloud.sync.domain.model
 
 // Data class to represent a photo from the gallery
 data class GalleryPhoto(

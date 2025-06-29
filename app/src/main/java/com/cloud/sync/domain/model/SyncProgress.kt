@@ -1,4 +1,4 @@
-package com.cloud.sync.data
+package com.cloud.sync.domain.model
 
 // Progress state for the SyncStatusManager
 data class SyncProgress(

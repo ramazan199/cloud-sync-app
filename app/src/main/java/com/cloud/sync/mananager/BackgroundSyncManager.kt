@@ -11,8 +11,8 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.cloud.sync.background.FullScanService
 import com.cloud.sync.background.PhotoSyncWorker
-import com.cloud.sync.data.TimeInterval
-import com.cloud.sync.data.repository.ISyncRepository
+import com.cloud.sync.domain.model.TimeInterval
+import com.cloud.sync.domain.repositroy.ISyncRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first

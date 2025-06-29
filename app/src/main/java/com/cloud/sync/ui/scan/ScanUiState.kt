@@ -1,4 +1,4 @@
-package com.cloud.sync.data.ui_state
+package com.cloud.sync.ui.scan
 
 sealed class ScanUiState {
     data object Idle : ScanUiState()

@@ -1,6 +1,6 @@
 package com.cloud.sync.common
 
-import com.cloud.sync.data.SyncProgress
+import com.cloud.sync.domain.model.SyncProgress
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

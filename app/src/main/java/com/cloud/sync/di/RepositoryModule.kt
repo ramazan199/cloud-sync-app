@@ -1,34 +1,34 @@
 package com.cloud.sync.di
 
-import android.content.Context
+import com.cloud.sync.data.local.datastore.SyncPreferencesDataSource
+import com.cloud.sync.data.local.mediastore.PhotoLocalDataSource
 import com.cloud.sync.data.repository.GalleryRepositoryImpl
-import com.cloud.sync.data.repository.IGalleryRepository
-import com.cloud.sync.data.repository.ISyncRepository
 import com.cloud.sync.data.repository.SyncRepositoryImpl
+import com.cloud.sync.domain.repositroy.IGalleryRepository
+import com.cloud.sync.domain.repositroy.ISyncRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryModule {
+object RepositoryModule {
 
     @Provides
     @Singleton
     fun provideGalleryRepository(
-        @ApplicationContext context: Context
+        photoLocalDataSource: PhotoLocalDataSource
     ): IGalleryRepository {
-        return GalleryRepositoryImpl(context)
+        return GalleryRepositoryImpl(photoLocalDataSource)
     }
 
     @Provides
     @Singleton
     fun provideSyncRepository(
-        @ApplicationContext context: Context
+        syncPreferencesDataSource: SyncPreferencesDataSource
     ): ISyncRepository {
-        return SyncRepositoryImpl(context)
+        return SyncRepositoryImpl(syncPreferencesDataSource)
     }
 }

@@ -1,4 +1,4 @@
-package com.cloud.sync.data.ui_state
+package com.cloud.sync.ui.sync
 
 // UI State class for the ViewModel
 data class SyncUiState(
