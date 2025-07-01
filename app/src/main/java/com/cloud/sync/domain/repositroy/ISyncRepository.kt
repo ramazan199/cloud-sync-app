@@ -17,8 +17,19 @@ interface ISyncRepository {
      */
     suspend fun saveSyncedIntervals(intervals: List<TimeInterval>)
 
+    /**
+     * Retrieves the starting point for future "sync from now" operations.
+     */
     val syncFromNowPoint: Flow<Long>
+
+    /**
+     * Saves the timestamp indicating the point from which to start syncing.
+     */
     suspend fun saveSyncFromNowPoint(timestamp: Long)
+
+    /**
+     * Deletes the saved "sync from now" timestamp.
+     */
     suspend fun deleteSyncFromNowPoint()
     suspend fun clearAllData()
 }

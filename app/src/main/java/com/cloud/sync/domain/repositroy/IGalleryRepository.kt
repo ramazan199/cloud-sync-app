@@ -2,7 +2,6 @@ package com.cloud.sync.domain.repositroy
 
 import com.cloud.sync.domain.model.GalleryPhoto
 
-
 /**
  * Interface for accessing photos from the device's gallery.
  */

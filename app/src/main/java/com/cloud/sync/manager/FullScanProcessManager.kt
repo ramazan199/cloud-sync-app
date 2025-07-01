@@ -15,7 +15,6 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
 
-
 /**
  * Concrete implementation of [com.cloud.sync.manager.interfaces.IFullScanProcessManager].
  * Manages the logic for a comprehensive gallery photo synchronization,

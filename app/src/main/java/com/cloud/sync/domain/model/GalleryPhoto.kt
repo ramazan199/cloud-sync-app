@@ -1,6 +1,8 @@
 package com.cloud.sync.domain.model
 
-// Data class to represent a photo from the gallery
+/**
+ * Represents a photo from the device's gallery.
+ */
 data class GalleryPhoto(
     val id: Long,
     val dateAdded: Long, // Timestamp in seconds

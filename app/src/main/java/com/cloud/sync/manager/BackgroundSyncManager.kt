@@ -22,7 +22,10 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
+/**
+ * Manages background synchronization tasks, including periodic photo sync and full media scans.
+ * It utilizes WorkManager for scheduling periodic tasks and directly starts/stops a foreground service for full scans.
+ */
 @Singleton
 class BackgroundSyncManager @Inject constructor(
     @ApplicationContext private val context: Context,

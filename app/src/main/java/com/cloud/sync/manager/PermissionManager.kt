@@ -10,6 +10,10 @@ import com.cloud.sync.manager.interfaces.IPermissionsManager
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
+/**
+ * Concrete implementation of [IPermissionsManager].
+ * Manages permission requests and checks for granted permissions.
+ */
 @ViewModelScoped
 class PermissionsManager @Inject constructor() : IPermissionsManager {
     private var launcher: ActivityResultLauncher<Array<String>>? = null
