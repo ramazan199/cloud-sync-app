@@ -54,6 +54,19 @@ android {
     packagingOptions {
         exclude("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
     }
+
+    // ADD THIS BLOCK
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
+//    (if your src/test/kotlin is not recognized automatically)
+//    sourceSets {
+//        test {
+//            java.srcDirs("src/test/kotlin")
+//        }
+//    }
 }
 
 dependencies {
@@ -70,7 +83,15 @@ dependencies {
     implementation(libs.androidx.datastore.core.android)
     implementation(libs.androidx.work.runtime.ktx)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.bundles.unit.test)
+
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -109,4 +130,16 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.serialization.json)
 //    implementation(project(":communicationLib"))
+    testImplementation(kotlin("test"))
+
+    // --- UNIT TEST DEPENDENCIES ---
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+
+    // The 'engine' is only needed at runtime to run the tests, not compile the code.
+    testRuntimeOnly(libs.junit.jupiter.engine)
+
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.kotlinx.coroutines.test)
 }
