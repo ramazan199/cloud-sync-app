@@ -112,14 +112,18 @@ class FullScanService : Service() {
      * @param text The status message to display in the notification.
      */
     private fun updateForegroundNotification(text: String) {
-        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        val notification = createNotification(text)
+        notificationManager.notify(NOTIFICATION_ID, notification)
+        startForeground(NOTIFICATION_ID, notification) // Keep service in foreground.
+    }
+
+    internal fun createNotification(text: String): Notification {
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setContentTitle("Gallery Sync")
             .setContentText(text)
             .setSmallIcon(android.R.drawable.ic_popup_sync)
-            .setOngoing(true) // Makes the notification non-dismissible.
+            .setOngoing(true)
             .build()
-        notificationManager.notify(NOTIFICATION_ID, notification)
-        startForeground(NOTIFICATION_ID, notification) // Keep service in foreground.
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
