@@ -5,9 +5,9 @@ import android.content.Context
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cloud.sync.mananager.IPermissionsManager
-import com.cloud.sync.mananager.IQRScanner
-import com.cloud.sync.mananager.PermissionSet
+import com.cloud.sync.manager.interfaces.IPermissionsManager
+import com.cloud.sync.manager.interfaces.IQRScanner
+import com.cloud.sync.manager.PermissionSet
 import com.journeyapps.barcodescanner.ScanOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

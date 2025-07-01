@@ -1,14 +1,10 @@
-package com.cloud.sync.mananager
+package com.cloud.sync.manager
 
 import androidx.activity.result.ActivityResultLauncher
+import com.cloud.sync.manager.interfaces.IQRScanner
 import com.journeyapps.barcodescanner.ScanOptions
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
-
-interface IQRScanner {
-    fun setLauncher(launcher: ActivityResultLauncher<ScanOptions>)
-    fun startScan()
-}
 
 @ViewModelScoped
 class QRScanner @Inject constructor() : IQRScanner {

@@ -1,9 +1,9 @@
 package com.cloud.sync.di
 
-import com.cloud.sync.mananager.IPermissionsManager
-import com.cloud.sync.mananager.IQRScanner
-import com.cloud.sync.mananager.PermissionsManager
-import com.cloud.sync.mananager.QRScanner
+import com.cloud.sync.manager.interfaces.IPermissionsManager
+import com.cloud.sync.manager.interfaces.IQRScanner
+import com.cloud.sync.manager.PermissionsManager
+import com.cloud.sync.manager.QRScanner
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

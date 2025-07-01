@@ -8,7 +8,6 @@ import com.cloud.sync.common.config.SyncConfig
 import com.cloud.sync.domain.model.GalleryPhoto
 import com.cloud.sync.domain.repositroy.IGalleryRepository
 import com.cloud.sync.domain.repositroy.ISyncRepository
-import com.cloud.sync.mananager.ISyncIntervalManager
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +23,6 @@ class PhotoSyncWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val syncRepository: ISyncRepository,
     private val galleryRepository: IGalleryRepository,
-    private val syncIntervalManager: ISyncIntervalManager,
     private val syncConfig: SyncConfig
 ) : CoroutineWorker(appContext, workerParams) {
 
@@ -57,7 +55,7 @@ class PhotoSyncWorker @AssistedInject constructor(
             val onBatchSave: suspend (Long) -> Unit = { newTimestamp ->
                 val updatedInterval = fromNowInterval.copy(end = newTimestamp)
                 allIntervals[fromNowIntervalIndex] = updatedInterval
-                syncRepository.saveSyncedIntervals(syncIntervalManager.mergeIntervals(allIntervals))
+                syncRepository.saveSyncedIntervals(allIntervals)
                 println("Worker: Saved batch progress. New end is $newTimestamp")
             }
 

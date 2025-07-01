@@ -1,13 +1,15 @@
 package com.cloud.sync.di
 
-import com.cloud.sync.mananager.BackgroundSyncManager
-import com.cloud.sync.mananager.IBackgroundSyncManager
-import com.cloud.sync.mananager.ISyncIntervalManager
-import com.cloud.sync.mananager.SyncIntervalManager
+import com.cloud.sync.manager.BackgroundSyncManager
+import com.cloud.sync.manager.FullScanProcessManager
+import com.cloud.sync.manager.interfaces.IBackgroundSyncManager
+import com.cloud.sync.manager.interfaces.IFullScanProcessManager
+
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 //application-wide singletons
 @Module
@@ -20,7 +22,8 @@ abstract class AppModule {
     ): IBackgroundSyncManager
 
     @Binds
-    abstract fun bindSyncIntervalManager(
-        impl: SyncIntervalManager
-    ): ISyncIntervalManager
+    @Singleton
+    abstract fun bindFullScanProcessManager(
+        impl: FullScanProcessManager
+    ): IFullScanProcessManager
 }

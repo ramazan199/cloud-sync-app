@@ -1,4 +1,4 @@
-package com.cloud.sync.mananager
+package com.cloud.sync.manager
 
 import android.Manifest
 import android.content.Context
@@ -6,14 +6,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
+import com.cloud.sync.manager.interfaces.IPermissionsManager
 import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
-
-interface IPermissionsManager {
-    fun setLauncher(launcher: ActivityResultLauncher<Array<String>>)
-    fun requestPermissions(permissionSet: PermissionSet)
-    fun hasPermissions(context: Context, permissionSet: PermissionSet): Boolean
-}
 
 @ViewModelScoped
 class PermissionsManager @Inject constructor() : IPermissionsManager {

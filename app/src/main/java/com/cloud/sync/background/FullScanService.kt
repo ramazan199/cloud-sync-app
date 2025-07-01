@@ -5,27 +5,19 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.cloud.sync.common.SyncStatusManager
-import com.cloud.sync.common.config.SyncConfig
-import com.cloud.sync.domain.model.GalleryPhoto
-import com.cloud.sync.domain.model.TimeInterval
-import com.cloud.sync.domain.repositroy.IGalleryRepository
-import com.cloud.sync.domain.repositroy.ISyncRepository
+import com.cloud.sync.manager.interfaces.IFullScanProcessManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
+import kotlin.coroutines.coroutineContext // Required for coroutineContext extension property
 
 @AndroidEntryPoint
 class FullScanService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     @Inject
-    lateinit var syncIntervalRepository: ISyncRepository
-    @Inject
-    lateinit var galleryRepository: IGalleryRepository
-    @Inject
-    lateinit var syncConfig: SyncConfig
+    lateinit var fullScanProcessor: IFullScanProcessManager
+
     private lateinit var notificationManager: NotificationManager
 
     companion object {
@@ -38,152 +30,103 @@ class FullScanService : Service() {
     override fun onCreate() {
         super.onCreate()
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            ACTION_START -> if (!SyncStatusManager.isSyncing()) {
-                serviceScope.launch { startFullScanLogic() }
-            }
-
-            ACTION_STOP -> stopSync()
-        }
-        return START_STICKY
-    }
-
-    private fun stopSync() {
-        serviceScope.coroutineContext.cancelChildren()
-        SyncStatusManager.update(false, "Full scan stopped.")
-        stopForeground(STOP_FOREGROUND_REMOVE); stopSelf()
-    }
-
-    private suspend fun startFullScanLogic() {
-        startForeground(NOTIFICATION_ID, createNotification("Starting scan..."))
-        SyncStatusManager.update(true, "Preparing full scan...")
-
-        try {
-//            repository.clearAllData() //TODO: remove clear its for testing purpose.
-            var allIntervals = syncIntervalRepository.syncedIntervals.first().toMutableList()
-            if (allIntervals.none { it.start == 0L }) allIntervals.add(0, TimeInterval(0, 0))
-            allIntervals.sortBy { it.start }
-
-            while (allIntervals.size >= 2) {
-                coroutineContext.ensureActive()
-
-                val interval1 = allIntervals[0]
-                val interval2 = allIntervals[1]
-
-                val photosInGap =
-                    galleryRepository.getPhotosInInterval(interval1.end + 1, interval2.start - 1)
-
-                if (photosInGap.isNotEmpty()) {
-                    // Its ONLY job is to update interval1's end.
-                    val onBatchSave: suspend (Long) -> Unit = { newEndTimestamp ->
-                        val updatedInterval1 = interval1.copy(end = newEndTimestamp)
-                        allIntervals[0] = updatedInterval1 // Update the interval in the list
-                        syncIntervalRepository.saveSyncedIntervals(allIntervals) // Save the entire list for crash recovery
-                    }
-
-                    // Passing the progress-saving lambda to the sync function.
-                    syncAndSaveInBatches(
-                        coroutineContext,
-                        photosInGap,
-                        "Syncing gap...",
-                        onBatchSave
-                    )
-                }
-
-                // --- MERGE LOGIC ---
-                // This code runs AFTER the entire gap is synced (or if there was no gap).
-                val finalInterval1 = allIntervals[0] // This will be the original or the updated one
-                val finalInterval2 = allIntervals[1]
-                val merged = TimeInterval(
-                    finalInterval1.start,
-                    maxOf(finalInterval1.end, finalInterval2.end)
-                )//consider we have some malfunction and interval1 is (start: 100, end: 800) interval2 is (start: 500, end: 600) so we need to take max of them.
-
-                allIntervals.removeAt(0)
-                allIntervals.removeAt(0)
-                allIntervals.add(0, merged)
-                // Saving the final merged state
-                syncIntervalRepository.saveSyncedIntervals(allIntervals)
-            }
-
-            // The rest of the logic for syncing the tail end
-            coroutineContext.ensureActive()
-            val finalInterval = allIntervals.first()
-            val photosInTail = galleryRepository.getPhotos(startTimeSeconds = finalInterval.end + 1)
-            if (photosInTail.isNotEmpty()) {
-                val onBatchSave: suspend (Long) -> Unit = { newEndTimestamp ->
-                    val updatedInterval = finalInterval.copy(end = newEndTimestamp)
-                    allIntervals[0] = updatedInterval
-                    syncIntervalRepository.saveSyncedIntervals(allIntervals)
-                }
-                syncAndSaveInBatches(coroutineContext, photosInTail, "Finalizing...", onBatchSave)
-            }
-
-            SyncStatusManager.update(false, "Full scan complete!")
-        } catch (e: Exception) {
-            if (e is CancellationException) throw e
-            SyncStatusManager.update(false, "Error: ${e.message}")
-        } finally {
-            stopForeground(STOP_FOREGROUND_REMOVE); stopSelf()
-        }
-    }
-
-
-    private suspend fun syncAndSaveInBatches(
-        context: CoroutineContext,
-        photos: List<GalleryPhoto>,
-        statusPrefix: String,
-        onBatchSave: suspend (Long) -> Unit
-    ) {
-        val batchSize = syncConfig.batchSize
-        var photosInBatch = 0
-        var lastSyncedTimestamp = 0L
-
-        photos.forEachIndexed { index, photo ->
-            context.ensureActive()
-            // TODO: FileUploader.startSendFileAsync(File(photo.path))
-            //  include path to GalleryPhoto class & include communicationLib in build gradle
-            delay(1000)
-            println("Uploaded ${photo.displayName}")
-
-            lastSyncedTimestamp = photo.dateAdded
-            updateStatus(true, "$statusPrefix (${index + 1}/${photos.size})")
-
-            if (++photosInBatch >= batchSize) {
-                onBatchSave(lastSyncedTimestamp)
-                photosInBatch = 0
-            }
-        }
-        // Saving any remaining photos that didn't make a full batch
-        if (photosInBatch > 0) {
-            onBatchSave(lastSyncedTimestamp)
-        }
-    }
-
-    private fun updateStatus(isSyncing: Boolean, text: String) {
-        SyncStatusManager.update(isSyncing, text)
-        notificationManager.notify(NOTIFICATION_ID, createNotification(text))
-    }
-
-    private fun createNotification(text: String): Notification {
+        // Create notification channel for ongoing service updates.
         val channel = NotificationChannel(
             NOTIFICATION_CHANNEL_ID,
             "Full Sync Service",
             NotificationManager.IMPORTANCE_LOW
         )
         notificationManager.createNotificationChannel(channel)
-        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setContentTitle("Gallery Sync").setContentText(text)
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        when (intent?.action) {
+            ACTION_START -> if (!SyncStatusManager.isSyncing()) {
+                startServiceLogic()
+            }
+            ACTION_STOP -> stopSync()
+        }
+        return START_NOT_STICKY
+    }
+
+    /**
+     * Initiates the full scan logic and starts observing processor status updates.
+     */
+    private fun startServiceLogic() {
+        // Collect status updates from the processor to manage the foreground notification.
+        serviceScope.launch {
+            SyncStatusManager.progress.collect { progress ->
+                updateForegroundNotification(progress.text)
+            }
+        }
+        // Launch the core full scan operation in a separate coroutine.
+        serviceScope.launch {
+            startFullScanLogicInternal()
+        }
+    }
+
+    /**
+     * Stops the full scan, cancels ongoing coroutines, and removes the foreground notification.
+     */
+    private fun stopSync() {
+        serviceScope.coroutineContext.cancelChildren()
+        SyncStatusManager.update(false, "Full scan stopped.")
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
+    /**
+     * Executes the main full scan and synchronization logic.
+     * This function delegates core operations to [fullScanProcessor].
+     */
+    private suspend fun startFullScanLogicInternal() {
+        SyncStatusManager.update(true, "Preparing full scan...")
+
+        try {
+            var allIntervals = fullScanProcessor.initializeIntervals()
+
+            // Process gaps and merge intervals until less than two remain.
+            while (allIntervals.size >= 2) {
+                coroutineContext.ensureActive() // Ensure the coroutine is still active for cancellation.
+                allIntervals = fullScanProcessor.processNextTwoIntervals(allIntervals, coroutineContext)
+            }
+
+            coroutineContext.ensureActive() // Ensure active before processing tail.
+            // Process any remaining photos at the end of the timeline.
+            fullScanProcessor.processTailEnd(allIntervals, coroutineContext)
+
+            SyncStatusManager.update(false, "Full scan complete!")
+        } catch (e: Exception) {
+            // Re-throw CancellationException to propagate cancellation correctly.
+            if (e is CancellationException) throw e
+            SyncStatusManager.update(false, "Error: ${e.message}")
+        } finally {
+            // Ensure service stops and notification is removed even if an error occurs.
+            stopForeground(STOP_FOREGROUND_REMOVE)
+            stopSelf()
+        }
+    }
+
+    /**
+     * Updates the persistent foreground notification with the current sync status.
+     * @param text The status message to display in the notification.
+     */
+    private fun updateForegroundNotification(text: String) {
+        val notification = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setContentTitle("Gallery Sync")
+            .setContentText(text)
             .setSmallIcon(android.R.drawable.ic_popup_sync)
-            .setOngoing(true).build()
+            .setOngoing(true) // Makes the notification non-dismissible.
+            .build()
+        notificationManager.notify(NOTIFICATION_ID, notification)
+        startForeground(NOTIFICATION_ID, notification) // Keep service in foreground.
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
+
     override fun onDestroy() {
         super.onDestroy()
-        serviceScope.cancel()
+        notificationManager.cancel(NOTIFICATION_ID) // for reliable notification cancellation
+        serviceScope.cancel() // Cancel all coroutines when the service is destroyed.
     }
 }
