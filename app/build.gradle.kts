@@ -1,10 +1,12 @@
+import com.android.build.api.dsl.Packaging
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    id("com.google.devtools.ksp")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -35,10 +37,6 @@ android {
             )
         }
     }
-//    compileOptions {
-//        sourceCompatibility = JavaVersion.VERSION_1_8
-//        targetCompatibility = JavaVersion.VERSION_1_8
-//    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -50,99 +48,66 @@ android {
         compose = true
         buildConfig = true
     }
-    packagingOptions {
+    fun Packaging.() {
         resources {
-            excludes += setOf("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+            excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
         }
     }
-
-    // ADD THIS BLOCK
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
         }
     }
-//    (if your src/test/kotlin is not recognized automatically)
-//    sourceSets {
-//        test {
-//            java.srcDirs("src/test/kotlin")
-//        }
-//    }
 }
 
 dependencies {
-
+    // AndroidX & Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Jetpack Compose
     implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.compose.android)
-    implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.navigation)
+
+    // Jetpack Data & Work
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.work.runtime.ktx)
 
-    testImplementation(libs.bundles.unit.test)
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
-
-    // Hilt(+navigation) & Ksp dependencies
+    // Hilt (Dependency Injection)
     implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.common)
-    implementation(libs.androidx.hilt.work)
-    ksp(libs.androidx.hilt.compiler)
-    ksp(libs.hilt.android.compiler)
-    // ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.android.compiler)
+    ksp(libs.hilt.compiler)
+    implementation(libs.hilt.common)
 
-    // QR Code Scanner dependencies
+
+    // Serialization & Cryptography
+    implementation(libs.kotlinx.serialization.json)
+
+    // QR Code Scanner
     implementation(libs.zxing.android.embedded)
     implementation(libs.zxing.core)
 
-    // Retrofit dependencies
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-
-    // bouncy castle
-    implementation(libs.bouncycastle) {
-        {
-            exclude("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
-        }
-    }
-
-    //okhttp
-    implementation(libs.okhttp.core)
-    implementation(libs.okhttp.logging.interceptor)
-
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.kotlinx.serialization.json)
-//    implementation(project(":communicationLib"))
-    testImplementation(kotlin("test"))
-
-    // --- UNIT TEST DEPENDENCIES ---
+    // Unit Testing
+    testImplementation(libs.bundles.unit.test)
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.params)
-
-    // The 'engine' is only needed at runtime to run the tests, not compile the code.
     testRuntimeOnly(libs.junit.jupiter.engine)
-
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.kotlinx.coroutines.test)
-
     testImplementation(libs.mockk)
+    testImplementation(kotlin("test"))
+
+    // Android Testing
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

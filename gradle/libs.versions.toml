@@ -1,98 +1,141 @@
 [versions]
+#-----------------------------------------------------------------------------------------
+# Android & Kotlin
+#-----------------------------------------------------------------------------------------
 agp = "8.10.1"
-hiltAndroid = "2.56.2"
+jacksonDatabind = "2.17.1"
+junitBom = "5.10.2"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
-junit = "4.13.2"
-junitVersion = "1.2.1"
-espressoCore = "3.6.1"
-lifecycleRuntimeKtx = "2.9.1"
+
+#-----------------------------------------------------------------------------------------
+# Jetpack
+#-----------------------------------------------------------------------------------------
 activityCompose = "1.10.1"
 composeBom = "2025.06.01"
-navigationComposeAndroid = "2.9.1"
-# QR Code Scanner versions
-zxingAndroidEmbedded = "4.3.0"
-zxingCore = "3.5.2"
-retrofit = "2.9.0"
-bouncycastle = "1.79"
-okhttp = "4.12.0"
-datastoreCoreAndroid = "1.1.7"
-workRuntimeKtx = "2.10.2"
-androidx_datastore_preferences = "1.1.7"
-kotlinx_serialization = "1.7.3"
-hiltCommon = "1.2.0"
-hiltWork = "1.2.0"
-androidxHiltCompiler = "1.2.0"
-junitJupiter = "5.10.1"
-mockitoKotlin = "5.2.1"
-mockitoCore = "5.11.0"
+datastore = "1.1.7"
+espressoCore = "3.6.1"
+hilt = "2.56.2"
+hiltExt = "1.2.0"
+junit = "1.2.1"
+lifecycle = "2.9.1"
+navigation = "2.9.1"
+workManager = "2.10.2"
+
+#-----------------------------------------------------------------------------------------
+# Third-Party
+#-----------------------------------------------------------------------------------------
+junitJupiter = "5.10.2"
 kotlinxCoroutines = "1.8.1"
+kotlinxSerialization = "1.7.3"
 mockk = "1.13.10"
+mockito = "5.11.0"
+mockitoKotlin = "5.2.1"
+okhttp = "4.12.0"
+zxing = "4.3.0"
+zxingCore = "3.5.2"
+
 
 [libraries]
+#-----------------------------------------------------------------------------------------
+# AndroidX Core & AppCompat
+#-----------------------------------------------------------------------------------------
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
-hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+
+#-----------------------------------------------------------------------------------------
+# Jetpack Compose
+#-----------------------------------------------------------------------------------------
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui" }
-androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
-androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
-# QR Code Scanner libraries
-zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
-zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-navigation = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigation" }
+androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 
-# retrofit
-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+#-----------------------------------------------------------------------------------------
+# Jetpack Lifecycle & ViewModel
+#-----------------------------------------------------------------------------------------
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 
-#bouncycastle
-bouncycastle = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+#-----------------------------------------------------------------------------------------
+# Jetpack DataStore
+#-----------------------------------------------------------------------------------------
+androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastore" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
-#okhttp
+#-----------------------------------------------------------------------------------------
+# Jetpack WorkManager
+#-----------------------------------------------------------------------------------------
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workManager" }
+
+#-----------------------------------------------------------------------------------------
+# Hilt (Dependency Injection)
+#-----------------------------------------------------------------------------------------
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltExt" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
+hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltExt" }
+
+#-----------------------------------------------------------------------------------------
+# Networking
+#-----------------------------------------------------------------------------------------
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabind" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junitBom" }
+jupiter-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
-androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
-androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
-androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "androidx_datastore_preferences" }
-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx_serialization" }
-androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
-androidx-hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltWork" }
-androidx-hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHiltCompiler" }
 
-# JUnit 5 components
+
+#-----------------------------------------------------------------------------------------
+# Serialization & Cryptography
+#-----------------------------------------------------------------------------------------
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+#-----------------------------------------------------------------------------------------
+# QR Code Scanning
+#-----------------------------------------------------------------------------------------
+zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxing" }
+zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
+
+#-----------------------------------------------------------------------------------------
+# Testing - Unit
+#-----------------------------------------------------------------------------------------
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junitJupiter" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junitJupiter" }
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params", version.ref = "junitJupiter" }
-
-
-# Mockito (with Kotlin extensions)
-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 
-# Coroutines Test
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
-
-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+#-----------------------------------------------------------------------------------------
+# Testing - Android
+#-----------------------------------------------------------------------------------------
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
 
 [plugins]
+#-----------------------------------------------------------------------------------------
+# Gradle & Kotlin Plugins
+#-----------------------------------------------------------------------------------------
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version = "2.0.21-1.0.27" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
 
 [bundles]
+#-----------------------------------------------------------------------------------------
+# Dependency Bundles
+#-----------------------------------------------------------------------------------------
 unit-test = [
     "mockito-core",
     "mockito-kotlin",
