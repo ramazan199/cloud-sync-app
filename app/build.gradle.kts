@@ -50,9 +50,10 @@ android {
         compose = true
         buildConfig = true
     }
-
     packagingOptions {
-        exclude("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+        resources {
+            excludes += setOf("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+        }
     }
 
     // ADD THIS BLOCK
