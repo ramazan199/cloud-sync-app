@@ -34,6 +34,8 @@ mockitoKotlin = "5.2.1"
 okhttp = "4.12.0"
 zxing = "4.3.0"
 zxingCore = "3.5.2"
+kotlinBip39 = "1.0.9"
+bouncyCastle = "1.70"
 
 
 [libraries]
@@ -93,12 +95,18 @@ okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "
 # Serialization & Cryptography
 #-----------------------------------------------------------------------------------------
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
-
+bouncyCastle-prov = { group = "org.bouncycastle", name = "bcprov-jdk15to18", version.ref = "bouncyCastle" }
 #-----------------------------------------------------------------------------------------
 # QR Code Scanning
 #-----------------------------------------------------------------------------------------
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxing" }
 zxing-core = { group = "com.google.zxing", name = "core", version.ref = "zxingCore" }
+
+#-----------------------------------------------------------------------------------------
+# Client-side Encryption
+#-----------------------------------------------------------------------------------------
+kotlin-bip39 = { module = "cash.z.ecc.android:kotlin-bip39", version.ref = "kotlinBip39" }
+
 
 #-----------------------------------------------------------------------------------------
 # Testing - Unit

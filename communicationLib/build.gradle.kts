@@ -11,4 +11,5 @@ dependencies {
     testImplementation(libs.jupiter.junit.jupiter)
     implementation(libs.okhttp.core)
     implementation(libs.jackson.databind)
+    implementation(libs.bouncyCastle.prov)
 }
