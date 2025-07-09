@@ -90,6 +90,7 @@ dependencies {
 
     // Serialization & Cryptography
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.security.crypto)
 
     // QR Code Scanner
     implementation(libs.zxing.android.embedded)
@@ -113,4 +114,7 @@ dependencies {
 
     // Client-side Encryption
     implementation(libs.kotlin.bip39)
+
+    // add communication library
+    implementation(project(":communicationLib"))
 }

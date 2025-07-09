@@ -44,12 +44,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun MnemonicScreen(
     mnemonicViewModel: MnemonicViewModel = hiltViewModel(),
-    onMnemonicConfirmed: (ByteArray) -> Unit
+    onMnemonicConfirmed: () -> Unit
 ) {
     val uiState by mnemonicViewModel.uiState.collectAsState()
 
-    LaunchedEffect(uiState.masterKey) {
-        uiState.masterKey?.let { onMnemonicConfirmed(it) }
+    LaunchedEffect(uiState.isKeySaved) {
+        onMnemonicConfirmed()
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
@@ -66,7 +66,7 @@ fun MnemonicScreen(
                 MnemonicDisplay(uiState.mnemonic)
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
-                    onClick = { mnemonicViewModel.deriveMasterKey() },
+                    onClick = { mnemonicViewModel.saveMasterKeyFromMnemonic() },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)

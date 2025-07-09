@@ -4,6 +4,7 @@ package com.cloud.sync.ui.mnemonic
 import androidx.lifecycle.ViewModel
 import cash.z.ecc.android.bip39.Mnemonics
 import cash.z.ecc.android.bip39.toSeed
+import com.cloud.sync.domain.repositroy.ICseMasterKeyRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,10 @@ import java.security.SecureRandom
 import javax.inject.Inject
 
 @HiltViewModel
-class MnemonicViewModel @Inject constructor() : ViewModel() {
+class MnemonicViewModel @Inject constructor(
+    private val keyRepository: ICseMasterKeyRepository,
+) :
+    ViewModel() {
 
     private val _uiState = MutableStateFlow(MnemonicUiState())
     val uiState: StateFlow<MnemonicUiState> = _uiState.asStateFlow()
@@ -34,11 +38,13 @@ class MnemonicViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun deriveMasterKey() {
+
+    fun saveMasterKeyFromMnemonic() {
         if (uiState.value.mnemonic.isNotBlank()) {
             val mnemonicCode = Mnemonics.MnemonicCode(uiState.value.mnemonic)
             val seed = mnemonicCode.toSeed()
-            _uiState.update { it.copy(masterKey = seed) }
+            keyRepository.saveKey(seed)
+            _uiState.update { it.copy(isKeySaved = true) }
         }
     }
 }

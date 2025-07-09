@@ -2,6 +2,6 @@ package com.cloud.sync.ui.mnemonic
 
 data class MnemonicUiState(
     val mnemonic: String = "",
-    val masterKey: ByteArray? = null,
+    val isKeySaved: Boolean = false,
     val isLoading: Boolean = false
 )
