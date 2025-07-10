@@ -55,6 +55,22 @@
             android:foregroundServiceType="dataSync"
             android:exported="false" />
 
+        <!-- Redirect URI Receiver Activity -->
+        <activity
+            android:name="net.openid.appauth.RedirectUriReceiverActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            tools:node="replace">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="${appAuthRedirectScheme}"
+                    android:host="redirect" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

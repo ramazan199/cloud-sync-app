@@ -1,7 +1,9 @@
 package com.cloud.sync.di
 
+import com.cloud.sync.manager.interfaces.IAuthManager
 import com.cloud.sync.manager.interfaces.IPermissionsManager
 import com.cloud.sync.manager.interfaces.IQRScanner
+import com.cloud.sync.manager.AuthManager
 import com.cloud.sync.manager.PermissionsManager
 import com.cloud.sync.manager.QRScanner
 import dagger.Binds
@@ -27,4 +29,12 @@ abstract class ManagerModule {
     abstract fun bindQRScanner(
         impl: QRScanner
     ): IQRScanner
+
+    @Binds
+    @ViewModelScoped
+    abstract fun bindAuthManager(
+        impl: AuthManager
+    ): IAuthManager
+
+
 }

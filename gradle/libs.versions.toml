@@ -3,6 +3,7 @@
 # Android & Kotlin
 #-----------------------------------------------------------------------------------------
 agp = "8.10.1"
+appauth = "0.11.1"
 jacksonDatabind = "2.17.1"
 junitBom = "5.10.2"
 kotlin = "2.0.21"
@@ -34,7 +35,7 @@ mockitoKotlin = "5.2.1"
 okhttp = "4.12.0"
 zxing = "4.3.0"
 zxingCore = "3.5.2"
-
+securityCrypto = "1.1.0-beta01"
 
 [libraries]
 #-----------------------------------------------------------------------------------------
@@ -111,15 +112,20 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
 
-#-----------------------------------------------------------------------------------------
-# Testing - Android
-#-----------------------------------------------------------------------------------------
+
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
 
-
+#-----------------------------------------------------------------------------------------
+# OAuth
+#-----------------------------------------------------------------------------------------
+appauth = { module = "net.openid:appauth", version.ref = "appauth" }
+#-----------------------------------------------------------------------------------------
+# Secure Storage
+#-----------------------------------------------------------------------------------------
+androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 [plugins]
 #-----------------------------------------------------------------------------------------
 # Gradle & Kotlin Plugins

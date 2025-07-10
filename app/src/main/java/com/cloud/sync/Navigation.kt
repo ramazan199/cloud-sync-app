@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.cloud.sync.ui.auth.AuthScreen
+import com.cloud.sync.ui.login.LoginScreen
 import com.cloud.sync.ui.scan.ScanScreen
 import com.cloud.sync.ui.sync.SyncScreen
 
@@ -51,6 +52,16 @@ fun AppNavigation() {
 //            deepLinks = listOf(navDeepLink { uriPattern = "test://debug/sync-screen/{content}" }),
         ) { backStackEntry ->
             SyncScreen()
+        }
+
+        composable("login") {
+            LoginScreen(onLoginSuccess = {
+                navController.navigate("sync") {
+                    popUpTo("login") {
+                        inclusive = true
+                    }
+                }
+            })
         }
     }
 }
