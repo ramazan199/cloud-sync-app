@@ -115,6 +115,7 @@ dependencies {
 
     // OAuth
     implementation(libs.appauth)
+    implementation(libs.jwtdecode)
 
     // Secure Storage
     implementation(libs.androidx.security.crypto)

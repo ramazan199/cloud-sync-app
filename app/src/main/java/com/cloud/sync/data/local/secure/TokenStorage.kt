@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
+import com.auth0.android.jwt.JWT
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -42,6 +43,21 @@ class TokenStorage @Inject constructor(@ApplicationContext private val context: 
             remove("access_token")
             remove("refresh_token")
             apply()
+        }
+    }
+
+    fun getEmail(): String? {
+        val token = getAccessToken()
+        return if (token != null) {
+            try {
+                val jwt = JWT(token)
+                jwt.getClaim("email").asString()
+            } catch (e: Exception) {
+                // Handle potential decoding errors
+                null
+            }
+        } else {
+            null
         }
     }
 }

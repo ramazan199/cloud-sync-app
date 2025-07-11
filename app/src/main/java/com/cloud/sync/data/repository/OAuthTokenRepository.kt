@@ -25,4 +25,8 @@ class OauthTokenRepository @Inject constructor(
     override fun clearTokens() {
         tokenStorage.clearTokens()
     }
+
+    override fun getEmail(): String? {
+        return tokenStorage.getEmail()
+    }
 }

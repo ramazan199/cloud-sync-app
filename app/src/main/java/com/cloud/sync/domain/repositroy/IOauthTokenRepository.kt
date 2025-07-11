@@ -5,4 +5,5 @@ interface IOauthTokenRepository {
     fun getAccessToken(): String?
     fun getRefreshToken(): String?
     fun clearTokens()
+    fun getEmail(): String?
 }
